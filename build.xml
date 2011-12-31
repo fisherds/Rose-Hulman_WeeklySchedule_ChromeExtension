@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<project name="Rose-Hulman Grid Extension" default="build">
+
+    <!-- Compiler Directory -->
+    <property name="closure-compiler.dir" 
+    	value="${basedir}/../../closure-compiler" />
+	
+    <!-- The compiler jar file -->
+    <property name="closure-compiler.jar" 
+    	value="${closure-compiler.dir}/build/compiler.jar" />
+	
+    <!-- Library Directory -->
+    <property name="closure-library.dir" 
+    	value="${basedir}/../../closure-library" />
+
+    <!-- Templates Directory -->
+    <property name="closure-templates.dir" 
+    	value="${basedir}/../../closure-templates" />
+
+    <!-- Output Build Directory -->
+    <property name="build.dir" 
+    	value="${basedir}/build" />
+	
+    <!-- output wrapper function (don't understand this to be honest) -->
+    <property name="outputwrapper" 
+    	value="(function(){%output%})();" />
+	
+    <!-- List of javascript files to compile -->
+    <property name="filesToCompile" value="${basedir}/js/roseGridPopup.js" />
+    
+    
+	<macrodef name="generate-template">
+		<attribute name="inputfile" />
+		<attribute name="outputPathFormat" />
+		<sequential>
+			<java jar="${closure-templates.dir}/build/SoyToJsSrcCompiler.jar"
+				fork="true" failonerror="true" logError="true">
+				<arg line='--outputPathFormat "@{outputPathFormat}"' />
+				<arg line="--shouldGenerateJsdoc" />
+				<arg line="--shouldProvideRequireSoyNamespaces" />
+				<arg line='"@{inputfile}"' />
+			</java>
+		</sequential>
+	</macrodef>
+	
+	<!-- Options for the compilationlevels:
+		WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS, ADVANCED_OPTIMIZATIONS" -->
+		
+	<macrodef name="closure-compile">
+		<attribute name="inputfile" />
+		<attribute name="outputfile" />
+		<attribute name="compilerjarfile" default="${closure-compiler.jar}" />
+		<attribute name="compilationlevel" default="SIMPLE_OPTIMIZATIONS" />
+		<attribute name="outputmode" default="compiled" />
+		<element name="extraflags" optional="yes"/>
+		<element name="extrapaths" optional="yes"/>
+		<sequential>
+			<exec executable="python" failonerror="true" logError="true">
+				<arg value="${closure-library.dir}/closure/bin/calcdeps.py" />
+				<arg line='-i "@{inputfile}"' />
+				<arg line='--output_file "@{outputfile}"' />
+				<arg line='-p "${closure-library.dir}"' />
+				<arg line='-p "${closure-templates.dir}/javascript/soyutils_usegoog.js"' />
+				<extrapaths />
+				<arg line="-o @{outputmode}" />
+				<arg line='-c "@{compilerjarfile}"' />
+				<arg line='-f "--compilation_level=@{compilationlevel}"' />
+				<extraflags />
+			</exec>
+		</sequential>
+	</macrodef>
+	
+	
+    <target name="clean" description="deletes all files created by this script">
+    	<delete dir="${build.dir}" />
+    </target>
+
+	<target name="replicate">
+		<copy todir="${build.dir}/files">
+			<fileset dir=".">
+				<include name="html/popup.html" />
+				<include name="manifest.json" />
+				<include name="images/**" />
+			</fileset>
+		</copy>
+	</target>
+
+    <target name="templates" description="generates hello.soy.js">
+		<mkdir dir="${build.dir}/templates" />
+    	<generate-template
+    		inputfile="templates/roseGrid.soy"
+    		outputPathFormat="${build.dir}/templates/roseGrid.soy.js"
+    		/>
+    </target>
+	
+    <target name="roseGrid-compiled"
+        depends="templates"
+		description="generates roseGrid-compiled.js">
+    	<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/files" />
+    	<closure-compile
+    		inputfile="${filesToCompile}"
+    		outputfile="${build.dir}/files/roseGrid-compiled.js"
+    		compilationlevel="ADVANCED_OPTIMIZATIONS" >
+    		<extrapaths>
+    			<arg line='-p "${build.dir}/templates"' />
+    		</extrapaths>
+    		<extraflags>
+    			<arg line='-f "--output_wrapper=${outputwrapper}"' />
+    			<arg line='-f "--warning_level=VERBOSE"' />
+    			<arg line='-f "--jscomp_error=checkTypes"' />
+    		</extraflags>
+    	</closure-compile>
+    </target>
+	
+	<target name="build" depends="roseGrid-compiled" />
+    
+</project>

@@ -1,0 +1,19 @@
+Rose-Hulman Weekly Schedule Chrome Extension
+
+The purpose of this Chrome Extension is mainly to learn.  The goal is to use Google's
+Closure tools to create a fun extension.  This project uses Ant to build the extension,
+generate the soy js, and create a .zip to upload to the Chrome store.
+
+The things I hope to learn include:
+ - Creating a set of tools to effectively use Closure
+   - This includes Ant, Eclipse, etc.
+ - Learn to use the Closure library
+   - Focus on UI controls
+   - All sorts of other things :)
+
+What the finished extension will do:
+ - Display a browser action popup with a simple grid of classes
+ - Provide a mechanism to fill the schedule by clicking a cell
+ - Save the schedule
+ - Be pretty
+ - Update the clock based on Rose time
