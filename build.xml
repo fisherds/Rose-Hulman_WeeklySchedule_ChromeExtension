@@ -79,9 +79,10 @@
 	<target name="replicate">
 		<copy todir="${build.dir}/files">
 			<fileset dir=".">
-				<include name="html/popup.html" />
+				<include name="html/**" />
 				<include name="manifest.json" />
 				<include name="images/**" />
+				<include name="styles/**" />
 			</fileset>
 		</copy>
 	</target>
