@@ -14,10 +14,6 @@
     <property name="closure-library.dir" 
     	value="${basedir}/../../closure-library" />
 
-    <!-- Templates Directory -->
-    <property name="closure-templates.dir" 
-    	value="${basedir}/../../closure-templates" />
-
     <!-- Output Build Directory -->
     <property name="build.dir" 
     	value="${basedir}/build" />
@@ -26,8 +22,8 @@
     <property name="outputwrapper" 
     	value="(function(){%output%})();" />
 	
-    <!-- List of javascript files to compile -->
-    <property name="filesToCompile" value="${basedir}/js/roseGridPopup.js" />
+    <!-- Compile this file first plus anything it requires -->
+    <property name="inputFileToCompile" value="${basedir}/js/entry.js" />
     
     
 	<macrodef name="generate-template">
@@ -61,7 +57,6 @@
 				<arg line='-i "@{inputfile}"' />
 				<arg line='--output_file "@{outputfile}"' />
 				<arg line='-p "${closure-library.dir}"' />
-				<arg line='-p "${closure-templates.dir}/javascript/soyutils_usegoog.js"' />
 				<extrapaths />
 				<arg line="-o @{outputmode}" />
 				<arg line='-c "@{compilerjarfile}"' />
@@ -70,8 +65,7 @@
 			</exec>
 		</sequential>
 	</macrodef>
-	
-	
+		
     <target name="clean" description="deletes all files created by this script">
     	<delete dir="${build.dir}" />
     </target>
@@ -87,30 +81,21 @@
 		</copy>
 	</target>
 
-    <target name="templates" description="generates hello.soy.js">
-		<mkdir dir="${build.dir}/templates" />
-    	<generate-template
-    		inputfile="templates/roseGrid.soy"
-    		outputPathFormat="${build.dir}/templates/roseGrid.soy.js"
-    		/>
-    </target>
-	
     <target name="roseGrid-compiled"
-        depends="templates"
-		description="generates roseGrid-compiled.js">
+    	description="generates roseGrid-compiled.js">
     	<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.dir}/files" />
     	<closure-compile
-    		inputfile="${filesToCompile}"
+    		inputfile="${inputFileToCompile}"
     		outputfile="${build.dir}/files/roseGrid-compiled.js"
-    		compilationlevel="ADVANCED_OPTIMIZATIONS" >
+    		compilationlevel="SIMPLE_OPTIMIZATIONS" >
     		<extrapaths>
-    			<arg line='-p "${build.dir}/templates"' />
+    			<arg line='-p "${basedir}/js"' />
     		</extrapaths>
     		<extraflags>
     			<arg line='-f "--output_wrapper=${outputwrapper}"' />
-    			<arg line='-f "--warning_level=VERBOSE"' />
-    			<arg line='-f "--jscomp_error=checkTypes"' />
+    			<!-- arg line='-f "XXwarning_level=VERBOSE"' -->
+    			<!-- arg line='-f "XXjscomp_error=checkTypes"' -->
     		</extraflags>
     	</closure-compile>
     </target>

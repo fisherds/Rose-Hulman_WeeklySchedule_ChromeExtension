@@ -1,15 +1,31 @@
 goog.provide('roseGrid.Popup');
 
 goog.require('goog.dom');
-goog.require('roseGrid.templates')
+goog.require('goog.events');
+goog.require('goog.ui.Control');
 
 /**
-* @param {string} message a message to display
+* Popup controller for the Popup page.
+* @constructor
 */
-roseGrid.Popup.sayHello = function(message) {
-	var data = {greeting: message, year: new Date().getFullYear()};
-	var html = roseGrid.templates.welcome(data);
-	goog.dom.getElement('hello').innerHTML = html;
+roseGrid.Popup = function(container) {
+	
+	goog.dom.getElement('top_title').innerHTML = "Popup called";
+	
+	var baseButtonClass = goog.getCssName('goog-button');
+	var buttons = goog.dom.getElementsByClass(baseButtonClass);
+	
+	for (var i = 0; i < buttons.length; i++) {
+		var button = buttons[i];
+		var control = new goog.ui.Control('');
+		control.decorate(button);
+		
+		goog.events.listen(control, goog.ui.Component.EventType.ACTION, 
+			goog.bind(this.handleAction_, this));
+	}
 };
 
-goog.exportSymbol('roseGrid.Popup.sayHello', roseGrid.Popup.sayHello);
+roseGrid.Popup.prototype.handleAction_ = function() {
+	goog.dom.getElement('top_title').innerHTML = "Clicked button";
+	window.console.log("button clicked");
+}
