@@ -1,6 +1,7 @@
 
 goog.require('goog.dom');
 goog.require('goog.events');
+goog.require('goog.debug');
 goog.require('roseGrid.Popup');
 
 goog.events.listen(window, goog.events.EventType.LOAD, function() {

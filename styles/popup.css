@@ -2,3 +2,41 @@ body {
 	min-width: 500px;
 	overflow-x: hidden;
 }
+
+.goog-control {
+  position: relative;
+  width: 20ex;
+  margin: 2px;
+  border: 2px solid #036;
+  padding: 2px;
+  font: normal 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
+  color: #036;
+  background-color:#69c;
+  cursor: pointer;
+  outline: none;
+  -moz-outline: none;
+}
+
+.goog-control-disabled {
+  border-color: #888;
+  color: #888;
+  background-color: #ccc;
+}
+
+.goog-control-hover {
+  border-color: #369;
+  color: #369;
+  background-color: #9cf;
+}
+
+.goog-control-active,
+.goog-control-selected,
+.goog-control-checked {
+  border-color: #9cf;
+  color: #9cf;
+  background-color: #369;
+}
+
+.goog-control-focused {
+  border-color: orange;
+}

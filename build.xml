@@ -94,8 +94,9 @@
     		</extrapaths>
     		<extraflags>
     			<arg line='-f "--output_wrapper=${outputwrapper}"' />
-    			<!-- arg line='-f "XXwarning_level=VERBOSE"' -->
-    			<!-- arg line='-f "XXjscomp_error=checkTypes"' -->
+    			<arg line='-f "--formatting=PRETTY_PRINT"' />
+    			<arg line='-f "--warning_level=VERBOSE"' />
+    			<!--arg line='-f "XXjscomp_error=checkTypes"' -->
     		</extraflags>
     	</closure-compile>
     </target>
