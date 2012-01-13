@@ -81,13 +81,13 @@
 		</copy>
 	</target>
 
-    <target name="roseGrid-compiled"
+    <target name="rosegrid-compiled"
     	description="generates roseGrid-compiled.js">
     	<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.dir}/files" />
     	<closure-compile
     		inputfile="${inputFileToCompile}"
-    		outputfile="${build.dir}/files/roseGrid-compiled.js"
+    		outputfile="${build.dir}/files/rosegrid-compiled.js"
     		compilationlevel="SIMPLE_OPTIMIZATIONS" >
     		<extrapaths>
     			<arg line='-p "${basedir}/js"' />
@@ -101,6 +101,6 @@
     	</closure-compile>
     </target>
 	
-	<target name="build" depends="roseGrid-compiled" />
+	<target name="build" depends="rosegrid-compiled" />
     
 </project>

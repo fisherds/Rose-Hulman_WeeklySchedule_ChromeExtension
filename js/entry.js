@@ -2,7 +2,7 @@
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.debug');
-goog.require('roseGrid.Popup');
+goog.require('rosegrid.PopupWindow');
 
 goog.events.listen(window, goog.events.EventType.LOAD, function() {
 	var body = document.body;
@@ -10,7 +10,7 @@ goog.events.listen(window, goog.events.EventType.LOAD, function() {
 	window.console.log("entry id=" + id);
 	
 	if (id == 'popup') {
-		var popup = new roseGrid.Popup(document.body);
+		var popup = new rosegrid.PopupWindow(document.body);
 		window.console.log("entry id=popup");
 	}
 	

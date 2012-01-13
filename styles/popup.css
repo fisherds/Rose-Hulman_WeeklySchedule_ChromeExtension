@@ -1,14 +1,15 @@
 body {
-	min-width: 500px;
-	overflow-x: hidden;
+  min-width: 500px;
+  background-color: #ddd;
 }
+
 .goog-control {
-  width: 40px;
-  height: 20px;
+  width: 100%;
+  height: 100%;
   padding: 2px;
   font: normal 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
   color: #036;
-  background-color:#69c;
+  background-color:#eee;
   cursor: pointer;
   outline: none;
 }
@@ -38,17 +39,24 @@ body {
 }
 
 h1 {
-	color: red;
-	text-align: center;
+  color: #c11;
+  text-align: center;
 }
 
+
 table {
- text-align: left;
- width: 100%;
+  text-align: center;
+  width: 100%;
+  background-color: #fff;
 }
 
 td {
-width: 40px;
-height: 20px;
-margin: 0px;
+  text-align: center;
+}
+
+td.cell-inner {
+  min-width: 30px;
+  height: 15px;
+  margin: 0px;
+  text-align: center;
 }
