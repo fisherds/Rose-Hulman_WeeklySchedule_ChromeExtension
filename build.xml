@@ -14,6 +14,10 @@
     <property name="closure-library.dir" 
     	value="${basedir}/../../closure-library" />
 
+    <!-- Templates Directory -->
+    <property name="closure-templates.dir" 
+    	value="${basedir}/../../closure-templates" />
+
     <!-- Output Build Directory -->
     <property name="build.dir" 
     	value="${basedir}/build" />
@@ -24,7 +28,6 @@
 	
     <!-- Compile this file first plus anything it requires -->
     <property name="inputFileToCompile" value="${basedir}/js/entry.js" />
-    
     
 	<macrodef name="generate-template">
 		<attribute name="inputfile" />
@@ -57,6 +60,7 @@
 				<arg line='-i "@{inputfile}"' />
 				<arg line='--output_file "@{outputfile}"' />
 				<arg line='-p "${closure-library.dir}"' />
+				<arg line='-p "${closure-templates.dir}/javascript/soyutils_usegoog.js"' />
 				<extrapaths />
 				<arg line="-o @{outputmode}" />
 				<arg line='-c "@{compilerjarfile}"' />
@@ -81,6 +85,14 @@
 		</copy>
 	</target>
 
+    <target name="popup-window-soy" description="generates popup_window.soy.js">
+		<mkdir dir="${build.dir}/templates" />
+    	<generate-template
+    		inputfile="templates/popup_window.soy"
+    		outputPathFormat="${build.dir}/templates/popup_window.soy.js"
+    		/>
+    </target>
+
     <target name="rosegrid-compiled"
     	description="generates roseGrid-compiled.js">
     	<mkdir dir="${build.dir}" />
@@ -91,6 +103,7 @@
     		compilationlevel="SIMPLE_OPTIMIZATIONS" >
     		<extrapaths>
     			<arg line='-p "${basedir}/js"' />
+    			<arg line='-p "${build.dir}/templates"' />
     		</extrapaths>
     		<extraflags>
     			<arg line='-f "--output_wrapper=${outputwrapper}"' />

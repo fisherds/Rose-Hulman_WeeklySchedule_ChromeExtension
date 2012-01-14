@@ -1,0 +1,71 @@
+{namespace rosegrid.templates}
+
+/**
+ * Full page
+ * @param days A list of strings holding the days of the week.
+ */
+{template .gridtable}
+<h1 id="top_title"></h1>
+<table border="1" cellpadding="0" cellspacing="0">
+  <tbody>
+    {call .periodnumberrow /}
+    {call .timerow /}
+    {foreach $day in $days}
+      {call .dayrow}
+        {param day: $day /}
+      {/call}
+    {/foreach}
+  </tbody>
+</table>
+{/template}
+
+/**
+* Full page
+*/
+{template .periodnumberrow}
+    <tr>
+      <td class={css top-left}></td>
+      {for $i in range(1, 11)}
+        <td>{$i}</td>
+      {/for}
+    </tr>
+{/template}
+
+/**
+* Full page
+*/
+{template .timerow}
+<tr>
+  <td class={css top-left}></td>
+  <td>8:05-8:55</td>
+  <td>9:00-9:50</td>
+  <td>9:55-10:45</td>
+  <td>10:50-11:40</td>
+  <td>11:45-12:35</td>
+  <td>12:40-1:30</td>
+  <td>1:35-2:25</td>
+  <td>2:30-3:20</td>
+  <td>3:25-4:15</td>
+  <td>4:20-5:10</td>
+</tr>
+{/template}
+
+/**
+ * Full page
+ * @param day A day of the week
+ */
+{template .dayrow}
+<tr>
+  <td>{$day}</td>
+  {for $i in range(1, 11)}
+    <td>{call .gridcell /}</td>
+  {/for}
+</tr>
+{/template}
+
+/**
+ * Full page
+ */
+{template .gridcell}
+  <div class="rg-cell"></div>
+{/template}
