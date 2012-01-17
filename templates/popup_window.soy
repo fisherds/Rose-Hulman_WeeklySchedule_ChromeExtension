@@ -1,17 +1,39 @@
+/*
+ * Builds up the html used within the Popup window.
+ * Author: fisherds@gmail.com (Dave Fisher)
+ */
+
 {namespace rosegrid.templates}
 
 /**
- * Full page
+ * Loads the full body of the Popup window page. 
+ * @param title A string for the page title.
  * @param days A list of strings holding the days of the week.
  */
-{template .gridtable}
-<h1 id="top_title"></h1>
+{template .popupWindowBody}
+  {call .topBar data="$title"/}
+  {call .gridTable data="all" /}
+{/template}
+
+/**
+ * Container for everything above the table.
+ * @param title Title to display at the top.
+ */
+{template .topBar}
+<h1 id="top_title">{$title}</h1>
+{/template}
+
+/**
+ * The complete weekly schedule table.
+ * @param days A list of strings holding the days of the week.
+ */
+{template .gridTable}
 <table border="1" cellpadding="0" cellspacing="0">
   <tbody>
-    {call .periodnumberrow /}
-    {call .timerow /}
+    {call .periodNumberRow /}
+    {call .periodTimesRow /}
     {foreach $day in $days}
-      {call .dayrow}
+      {call .weekdayRow}
         {param day: $day /}
       {/call}
     {/foreach}
@@ -20,11 +42,11 @@
 {/template}
 
 /**
-* Full page
+* Adds the table row for the period numbers, 1 to 10.
 */
-{template .periodnumberrow}
+{template .periodNumberRow}
     <tr>
-      <td class={css top-left}></td>
+      <td class={css top-left-cell}></td>
       {for $i in range(1, 11)}
         <td>{$i}</td>
       {/for}
@@ -32,11 +54,11 @@
 {/template}
 
 /**
-* Full page
+* Adds the period times row. 
 */
-{template .timerow}
+{template .periodTimesRow}
 <tr>
-  <td class={css top-left}></td>
+  <td class={css top-left-cell}></td>
   <td>8:05-8:55</td>
   <td>9:00-9:50</td>
   <td>9:55-10:45</td>
@@ -51,21 +73,32 @@
 {/template}
 
 /**
- * Full page
+ * Adds a weekday row in the table.
  * @param day A day of the week
  */
-{template .dayrow}
+{template .weekdayRow}
 <tr>
   <td>{$day}</td>
   {for $i in range(1, 11)}
-    <td>{call .gridcell /}</td>
+    <td class={css button-cell}></td>
   {/for}
 </tr>
 {/template}
 
 /**
- * Full page
+ * Represents a single clickable cell on in the table.
+ * This is the area that can be customized to decorate instead of render.
+ * Currently it's just a div with the appropriate class used with render.
  */
-{template .gridcell}
-  <div class="rg-cell"></div>
+{template .gridCell}
+<div class={css wrapper}>
+  <div class={css cell-inner}>
+    <div class={css course-name}></div>
+  </div>
+</div>
+<div class={css wrapper}>
+  <div class={css cell-inner}>
+    <div class={css room-number}></div>
+  </div>
+</div>
 {/template}

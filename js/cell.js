@@ -1,8 +1,8 @@
-/*
-* @fileOverview Control subclass that serves as an individual cell in the grid.
-*
-* @author David Fisher (fisherds@gmail.com)
-*/
+/**
+ * @fileOverview Control subclass that serves as an individual cell in the grid.
+ *
+ * @author David Fisher (fisherds@gmail.com)
+ */
 
 goog.provide('rosegrid.ui.Cell');
 
@@ -14,14 +14,17 @@ goog.require('goog.ui.Control');
 /**
  * Control that displays a single cell in the Rose grid.
  * @param {rosegrid.CellModel=} cellModel 
- * @param {rosegrid.ui.CellRenderer=} renderer
+ * @param {goog.ui.ControlRenderer=} renderer
  * @constructor
- * @extends {goog.is.Control}
+ * @extends {goog.ui.Control}
  */
 rosegrid.ui.Cell = function(cellModel, renderer) {
+  if (!renderer) {
+    renderer = goog.ui.ControlRenderer.getCustomRenderer(goog.ui.ControlRenderer, 'rg-cell');
+  }
   goog.base(this, null /* content */, renderer);
   this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
-  //this.setSupportedState(goog.ui.Component.State.DISABLED, false);
+  this.setSupportedState(goog.ui.Component.State.DISABLED, false);
   
   if (!cellModel) {
     cellModel = {courseName: '', roomNumber: ''};
@@ -47,12 +50,17 @@ rosegrid.ui.Cell.prototype.getRoomNumber = function() {
 };
 
 /** @inheritDoc */
-rosegrid.ui.Cell.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
-  // Override the superclass click listener
+rosegrid.ui.Cell.prototype.createDom = function() {
+  goog.base(this, 'createDom');
+  goog.soy.renderElement(this.getElement(), rosegrid.templates.gridCell);
 };
 
-goog.ui.registry.setDefaultRenderer(rosegrid.ui.Cell, rosegrid.ui.CellRenderer);
+/** @inheritDoc */
+rosegrid.ui.Cell.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+};
 
-goog.ui.registry.setDecoratorByClassName(rosegrid.ui.CellRenderer.CSS_CLASS, 
-    function() { return new rosegrid.ui.Cell(); });
+/** @inheritDoc */
+rosegrid.ui.Cell.prototype.canDecorate = function() {
+  return false;
+}

@@ -3,10 +3,8 @@ body {
   background-color: #ddd;
 }
 
-.goog-control {
-  width: 100%;
+.rg-cell {
   height: 100%;
-  padding: 2px;
   font: normal 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
   color: #036;
   background-color:#eee;
@@ -14,28 +12,27 @@ body {
   outline: none;
 }
 
-.goog-control-disabled {
+.rg-cell-disabled {
   border-color: #888;
   color: #888;
   background-color: #ccc;
 }
 
-.goog-control-hover {
+.rg-cell-hover {
   border-color: #369;
   color: #369;
   background-color: #9cf;
 }
 
-.goog-control-active,
-.goog-control-selected,
-.goog-control-checked {
+.rg-cell-active,
+.rg-cell-selected,
+.rg-cell-checked {
   border-color: #9cf;
   color: #9cf;
   background-color: #369;
 }
 
-.goog-control-focused {
-  border-color: orange;
+.rg-cell-focused {
 }
 
 h1 {
@@ -44,19 +41,33 @@ h1 {
 }
 
 
+
 table {
-  text-align: center;
-  width: 100%;
   background-color: #fff;
+  border: none;
 }
 
 td {
   text-align: center;
 }
 
-td.cell-inner {
-  min-width: 30px;
-  height: 15px;
-  margin: 0px;
-  text-align: center;
+td.top-left-cell {
+  border: none;
+  background-color: #ddd;
+}
+
+.wrapper {
+  display:table;  
+  background-color: #fff;
+  width: 100%;
+}
+
+.cell-inner {
+  vertical-align:middle;
+  display:table-cell;
+  height: 20px;
+}
+
+.room-number,
+.course-name {
 }
