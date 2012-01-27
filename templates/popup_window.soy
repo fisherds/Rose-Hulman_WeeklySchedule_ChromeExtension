@@ -6,21 +6,19 @@
 {namespace rosegrid.templates}
 
 /**
- * Loads the full body of the Popup window page. 
- * @param title A string for the page title.
+ * Loads the full body of the Popup window page.
  * @param days A list of strings holding the days of the week.
  */
 {template .popupWindowBody}
-  {call .topBar data="$title"/}
+  {call .topBar /}
   {call .gridTable data="all" /}
 {/template}
 
 /**
  * Container for everything above the table.
- * @param title Title to display at the top.
  */
 {template .topBar}
-<h1 id="top_title">{$title}</h1>
+  <img class={css logo} src="../images/logo_rhit.png" alt="Rose-Hulman Logo">
 {/template}
 
 /**
@@ -45,7 +43,7 @@
 * Adds the table row for the period numbers, 1 to 10.
 */
 {template .periodNumberRow}
-    <tr>
+    <tr class={css period-row}{sp}{css period-number-row}>
       <td class={css top-left-cell}></td>
       {for $i in range(1, 11)}
         <td>{$i}</td>
@@ -57,7 +55,7 @@
 * Adds the period times row. 
 */
 {template .periodTimesRow}
-<tr>
+<tr class={css period-row}{sp}{css period-times-row}>
   <td class={css top-left-cell}></td>
   <td>8:05-8:55</td>
   <td>9:00-9:50</td>
@@ -78,17 +76,17 @@
  */
 {template .weekdayRow}
 <tr>
-  <td>{$day}</td>
+  <td class={css day-label}>{$day}</td>
   {for $i in range(1, 11)}
-    <td class={css button-cell}></td>
+    <td class={css cell-control}></td>
   {/for}
 </tr>
 {/template}
 
 /**
  * Represents a single clickable cell on in the table.
- * This is the area that can be customized to decorate instead of render.
- * Currently it's just a div with the appropriate class used with render.
+ * Crazy wray9pper fix was something I found to do vertical-alignment.
+ *   http://blog.themeforest.net/tutorials/vertical-centering-with-css/
  */
 {template .gridCell}
 <div class={css wrapper}>
@@ -101,4 +99,14 @@
     <div class={css room-number}></div>
   </div>
 </div>
+{/template}
+
+/**
+ * Dialog box for creating and editing a course.
+ */
+{template .courseInfoDialog}
+<form>
+  Course name: <input id="dialog-course-name" type="text"><br>
+  Room number: <input id="dialog-room-number" type="text"><br>
+</form>
 {/template}

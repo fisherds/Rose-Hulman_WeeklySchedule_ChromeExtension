@@ -46,6 +46,32 @@
 	<!-- Options for the compilationlevels:
 		WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS, ADVANCED_OPTIMIZATIONS" -->
 		
+	<macrodef name="closure-builder">
+		<attribute name="inputfile" />
+		<attribute name="outputfile" />
+		<attribute name="compilerjarfile" default="${closure-compiler.jar}" />
+		<attribute name="compilationlevel" default="SIMPLE_OPTIMIZATIONS" />
+		<attribute name="outputmode" default="compiled" />
+		<element name="extraflags" optional="yes"/>
+		<element name="extrapaths" optional="yes"/>
+		<sequential>
+			<exec executable="python" failonerror="true" logError="true">
+				<arg value="${closure-library.dir}/closure/bin/build/closurebuilder.py" />
+				<arg line='-i "@{inputfile}"' />
+				<arg line='--output_file="@{outputfile}"' />
+				<arg line='--root="${closure-library.dir}"' />
+				<arg line='--root="${closure-templates.dir}"' />
+				<arg line='-i "${closure-templates.dir}/javascript/soyutils_usegoog.js"' />
+				<arg line='--namespace="rosegrid.PopupWindow"' />
+				<extrapaths />
+				<arg line="-o @{outputmode}" />
+				<arg line='-c "@{compilerjarfile}"' />
+				<arg line='-f "--compilation_level=@{compilationlevel}"' />
+				<extraflags />
+			</exec>
+		</sequential>
+	</macrodef>
+		
 	<macrodef name="closure-compile">
 		<attribute name="inputfile" />
 		<attribute name="outputfile" />
@@ -93,7 +119,7 @@
     		/>
     </target>
 
-    <target name="rosegrid-compiled"
+	<target name="rosegrid-compiled"
     	description="generates roseGrid-compiled.js">
     	<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.dir}/files" />
@@ -113,6 +139,28 @@
     		</extraflags>
     	</closure-compile>
     </target>
+	<!--
+	    <target name="rosegrid-compiled"
+    	description="generates roseGrid-compiled.js">
+    	<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/files" />
+    	<closure-builder
+    		inputfile="${inputFileToCompile}"
+    		outputfile="${build.dir}/files/rosegrid-compiled.js"
+    		compilationlevel="SIMPLE_OPTIMIZATIONS" >
+    		<extrapaths>
+    			<arg line='XXroot="${basedir}/js"' />
+    			<arg line='XXroot="${build.dir}/templates"' />
+    		</extrapaths>
+    		<extraflags>
+    			<arg line='-f "XXoutput_wrapper=${outputwrapper}"' />
+    			<arg line='-f "XXformatting=PRETTY_PRINT"' />
+    			<arg line='-f "XXwarning_level=VERBOSE"' />
+    			<arg line='-f "XXjscomp_error=checkTypes"' />
+    		</extraflags>
+    	</closure-builder>
+    </target>
+	-->
 	
 	<target name="build" depends="rosegrid-compiled" />
     

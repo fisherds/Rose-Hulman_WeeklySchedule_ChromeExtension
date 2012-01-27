@@ -13,4 +13,7 @@
 // limitations under the License.
 
 var _allTests = [
-"day_model_test.html","week_model_test.html"];
+    "model/cell_test.html",
+    "model/day_test.html",
+    "model/week_test.html",
+    "model/course_test.html"];

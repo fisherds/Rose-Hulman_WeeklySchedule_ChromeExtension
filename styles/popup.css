@@ -1,15 +1,20 @@
 body {
   min-width: 500px;
-  background-color: #ddd;
+  background-color: #FFF8ED;
+}
+
+.logo {
+  margin: 2px;
+}
+
+.cell-control {
+  background-color: #fff;
 }
 
 .rg-cell {
-  height: 100%;
-  font: normal 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
-  color: #036;
-  background-color:#eee;
+  font: normal 8pt Tahoma;
+  color: #000;
   cursor: pointer;
-  outline: none;
 }
 
 .rg-cell-disabled {
@@ -40,10 +45,29 @@ h1 {
   text-align: center;
 }
 
+.period-row td {
+  background-color: #B8C5D3;
+}
 
+.period-number-row td {
+  font: bold 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
+}
+
+.period-times-row td {
+  font: normal 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
+}
+
+.period-row td {
+  background-color: #B8C5D3;
+  font: normal 9pt "Trebuchet MS", Tahoma, Arial, sans-serif;
+}
+
+.day-label {
+  background-color: #B8C5D3;
+  font: normal 10pt "Trebuchet MS", Tahoma, Arial, sans-serif;
+}
 
 table {
-  background-color: #fff;
   border: none;
 }
 
@@ -53,18 +77,17 @@ td {
 
 td.top-left-cell {
   border: none;
-  background-color: #ddd;
+  background-color: transparent;
 }
 
 .wrapper {
-  display:table;  
-  background-color: #fff;
+  display: table;
   width: 100%;
 }
 
 .cell-inner {
-  vertical-align:middle;
-  display:table-cell;
+  vertical-align: middle;
+  display: table-cell;
   height: 20px;
 }
 
