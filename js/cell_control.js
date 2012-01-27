@@ -106,4 +106,4 @@ rosegrid.ui.CellControl.prototype.updateDisplay = function(cellModelProperties) 
 /** @inheritDoc */
 rosegrid.ui.CellControl.prototype.canDecorate = function() {
   return false;
-}
+};

@@ -14,7 +14,7 @@ function testShortWeek() {
   var tuesday = new rosegrid.model.Day(rosegrid.Weekday.TUESDAY);
   var days = [monday, tuesday];
   try {
-    var shortWeek = new rosegrid.model.Week(days);
+    new rosegrid.model.Week(days);
     fail('Should have thrown an error');
   } catch(e) {
     assertEquals('Week must have 5 days', e.message);
@@ -26,7 +26,7 @@ function testWrongDaysWeek() {
   var tuesday = new rosegrid.model.Day(rosegrid.Weekday.TUESDAY);
   var days = [monday, tuesday, monday, tuesday, monday];
   try {
-    var wrongDaysWeek = new rosegrid.model.Week(days);
+    new rosegrid.model.Week(days);
     fail('Should have thrown an error');
   } catch(e) {
     assertEquals('Week must have the correct 5 days', e.message);

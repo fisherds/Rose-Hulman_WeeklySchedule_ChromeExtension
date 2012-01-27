@@ -46,7 +46,7 @@ rosegrid.model.Course = function(cellIndices, courseName, roomNumber, cellBackgr
    * @type {string}
    */
   this.cellTextColor_ = cellTextColor || '#000';
-}
+};
 
 
 /**

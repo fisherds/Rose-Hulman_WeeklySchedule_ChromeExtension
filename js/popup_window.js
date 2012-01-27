@@ -98,7 +98,7 @@ rosegrid.PopupWindow.prototype.init_ = function() {
     
 	this.logger.info('Total number of listeners = ' + goog.events.getTotalListenerCount());
 	// Originally 252 prior to adding a container
-}
+};
 
 
 /**
