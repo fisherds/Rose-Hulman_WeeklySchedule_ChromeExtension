@@ -1,4 +1,6 @@
 
+goog.provide('rosegrid.entry');
+
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.debug');
@@ -11,5 +13,4 @@ goog.events.listen(window, goog.events.EventType.LOAD, function() {
 	if (id == 'popup') {
 		new rosegrid.PopupWindow(document.body);
 	}
-	
 });

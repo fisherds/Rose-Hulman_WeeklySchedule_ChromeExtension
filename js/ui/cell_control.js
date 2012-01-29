@@ -85,19 +85,10 @@ rosegrid.ui.CellControl.prototype.enterDocument = function() {
 
 /**
  * Update the cell with new model object properties and update the DOM elements.
- * @param {Object=} cellModelProperties Cell model with new properties.
+ * @param {rosegrid.model.CellProperties=} cellModelProperties Object with new properties for the model.Cell
  */
 rosegrid.ui.CellControl.prototype.updateDisplay = function(cellModelProperties) {
-/*  if (cellModelProperties) {
-    if (!goog.string.isEmptySafe(cellModelProperties.courseName)) {
-      this.getModel().courseName = cellModelProperties.courseName;
-    }
-    if (!goog.string.isEmptySafe(cellModelProperties.roomNumber)) {
-      this.getModel().roomNumber = cellModelProperties.roomNumber;
-    }
-  }*/
   this.getModel().setProperties(cellModelProperties);
-
   this.courseNameDiv.innerHTML = this.getModel().courseName;
   this.roomNumberDiv.innerHTML = this.getModel().roomNumber;
 };

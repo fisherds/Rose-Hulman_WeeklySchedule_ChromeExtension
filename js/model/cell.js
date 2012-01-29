@@ -64,7 +64,7 @@ rosegrid.model.Cell.prototype.clear = function() {
 /**
  * Sets multiple properties of the model.Cell using the cellModelProperties.
  *   It's a set all properties that exist function.
- * @param {rosegrid.model.CellProperties} cellModelProperties Object with new properties for the model.Cell.
+ * @param {rosegrid.model.CellProperties=} cellModelProperties Object with new properties for the model.Cell.
  */
 rosegrid.model.Cell.prototype.setProperties = function(cellModelProperties) {
   if (cellModelProperties) {

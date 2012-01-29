@@ -136,25 +136,23 @@ rosegrid.PopupWindow.prototype.handleDialogClose_ = function(e) {
   	var dialogEvent = /** type {goog.ui.Dialog.Event} */ (e);
   	if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.OK) {
   	  var nameValue = goog.dom.getElement('dialog-course-name').value;
-	  var roomValue = goog.dom.getElement('dialog-room-number').value;
-	  
-	  // TODO: Set the values on the activeCell and have it set the display values.
-	  //var nameCell = goog.dom.getElementsByTagNameAndClass(null, 'course-name', this.activeCell.getElement())[0];
-	  //var roomCell = goog.dom.getElementsByTagNameAndClass(null, 'room-number', this.activeCell.getElement())[0];
-	  //nameCell.innerHTML = name;
-	  //roomCell.innerHTML = room;
-	  
-	  //this.activeCell.getModel().courseName = name;
-	  //this.activeCell.getModel().roomNumber = room;
-	  this.activeCell.updateDisplay({courseName: nameValue, roomNumber: roomValue});
-	  
-	  
-  	} else if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.CANCEL) {
-  	  this.logger.info('Cancel pressed');
-  	} else {
-  	  this.logger.info('Unknown button');
-  	}
-  	
+  	  var roomValue = goog.dom.getElement('dialog-room-number').value;
+  	  
+  	  // TODO: Figure out how to use the updateDisplay with the final system
+  	  this.activeCell.getModel().courseName = nameValue;
+  	  this.activeCell.getModel().roomNumber = roomValue;
+  	  
+  	  
+  	  //var newValues = {courseName: nameValue, roomNumber: roomValue};
+  	  this.activeCell.updateDisplay();
+  	  
+  	  
+    	} else if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.CANCEL) {
+    	  this.logger.info('Cancel pressed');
+    	} else {
+    	  this.logger.info('Unknown button');
+    	}
+    	
 
 	
 };
