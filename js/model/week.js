@@ -1,6 +1,8 @@
 /**
  * @fileoverview Holds the data to represent the grid cells.
  * WeekModel is an array of 5 DayModel objects. 
+ *   
+ * @author fisherds@gmail.com (Dave Fisher)
  */
 
 goog.provide('rosegrid.model.Week');
@@ -20,20 +22,20 @@ rosegrid.CellIndex;
 
 /**
  * Create a full week model of all the cell models.
- * @param {Array.<rosegrid.model.Day>=} items
+ * @param {Array.<rosegrid.model.Day>=} items list of rosegrid.model.Day objects representing the days of the week.
  * @constructor
  */
 rosegrid.model.Week = function(items) {
 
   if (!items) {
     items = [];
-  	items.push(new rosegrid.model.Day(rosegrid.Weekday.MONDAY));
-  	items.push(new rosegrid.model.Day(rosegrid.Weekday.TUESDAY));
-  	items.push(new rosegrid.model.Day(rosegrid.Weekday.WEDNESDAY));
-  	items.push(new rosegrid.model.Day(rosegrid.Weekday.THURSDAY));
-  	items.push(new rosegrid.model.Day(rosegrid.Weekday.FRIDAY));
+    items.push(new rosegrid.model.Day(rosegrid.Weekday.MONDAY));
+    items.push(new rosegrid.model.Day(rosegrid.Weekday.TUESDAY));
+    items.push(new rosegrid.model.Day(rosegrid.Weekday.WEDNESDAY));
+    items.push(new rosegrid.model.Day(rosegrid.Weekday.THURSDAY));
+    items.push(new rosegrid.model.Day(rosegrid.Weekday.FRIDAY));
   }
-  
+
   if (items.length != 5) {
     throw Error('Week must have 5 days');
   }
@@ -47,7 +49,7 @@ rosegrid.model.Week = function(items) {
    * @type {!Array.<rosegrid.model.Day>}
    * @private
    */
-   this.dayModels_ = goog.array.clone(items);
+  this.dayModels_ = goog.array.clone(items);
 };
 
 

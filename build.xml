@@ -2,33 +2,38 @@
  
 <project name="Rose-Hulman Grid Extension" default="build">
 
+<!-- Defining variables for file locations -->
+	
     <!-- Compiler Directory -->
-    <property name="closure-compiler.dir" 
-    	value="${basedir}/../../closure-compiler" />
+    <property name="closure-compiler.dir" value="${basedir}/../../closure-compiler" />
 	
     <!-- The compiler jar file -->
-    <property name="closure-compiler.jar" 
-    	value="${closure-compiler.dir}/build/compiler.jar" />
+    <property name="closure-compiler.jar" value="${closure-compiler.dir}/build/compiler.jar" />
 	
     <!-- Library Directory -->
-    <property name="closure-library.dir" 
-    	value="${basedir}/../../closure-library" />
+    <property name="closure-library.dir" value="${basedir}/../../closure-library" />
 
     <!-- Templates Directory -->
-    <property name="closure-templates.dir" 
-    	value="${basedir}/../../closure-templates" />
+    <property name="closure-templates.dir" value="${basedir}/../../closure-templates" />
 
     <!-- Output Build Directory -->
-    <property name="build.dir" 
-    	value="${basedir}/build" />
+    <property name="build.dir" value="${basedir}/build" />
 	
-    <!-- output wrapper function (don't understand this to be honest) -->
-    <property name="outputwrapper" 
-    	value="(function(){%output%})();" />
+	<!-- Path to this project from base.js (used by depswriter.py) -->
+	<property name="fromBase.dir"
+		value="../../../workspace2012/Rose-Hulman_WeeklySchedule_ChromeExtension" />
+	
+    <!-- output wrapper function -->
+	<!-- Optional helper function used by the compiler target to allow spaces in the output file -->
+    <property name="outputwrapper" value="(function(){%output%})();" />
 	
     <!-- Compile this file first plus anything it requires -->
+	<!-- Used as an option to calcdeps, which is not required by closer-builder -->
     <property name="inputFileToCompile" value="${basedir}/js/entry.js" />
-    
+
+<!-- Reuseable commands -->
+
+	<!-- SoyToJsSrcCompiler command to generate .soy.js functions for Soy files -->
 	<macrodef name="generate-template">
 		<attribute name="inputfile" />
 		<attribute name="outputPathFormat" />
@@ -42,10 +47,9 @@
 			</java>
 		</sequential>
 	</macrodef>
-	
-	<!-- Options for the compilationlevels:
-		WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS, ADVANCED_OPTIMIZATIONS" -->
 		
+	<!-- closurebuilder.py to compile the JavaScript (replaces calcdeps) -->
+	<!-- Does not work yet -->
 	<macrodef name="closure-builder">
 		<attribute name="inputfile" />
 		<attribute name="outputfile" />
@@ -71,7 +75,8 @@
 			</exec>
 		</sequential>
 	</macrodef>
-		
+
+	<!-- Using calcdeps to compile the JavaScript (could also be used to generate a deps file) -->
 	<macrodef name="closure-compile">
 		<attribute name="inputfile" />
 		<attribute name="outputfile" />
@@ -95,6 +100,28 @@
 			</exec>
 		</sequential>
 	</macrodef>
+	
+	<!-- Using calcdeps to compile the JavaScript (could also be used to generate a deps file) -->
+	<macrodef name="depswriter">
+		<attribute name="outputfile" />
+		<element name="extrapaths" optional="yes"/>
+		<sequential>
+			<exec executable="python" failonerror="true" logError="true">
+				<arg value="${closure-library.dir}/closure/bin/build/depswriter.py" />
+				<arg line='--root_with_prefix="${closure-templates.dir}/javascript ../../../closure-templates/javascript"' />
+				<arg line='--root_with_prefix="${build.dir}/templates ${fromBase.dir}/build/templates"' />
+				<arg line='--root_with_prefix="js ${fromBase.dir}/js"' />
+				<arg line='--output_file="@{outputfile}"' />
+				<extrapaths />
+			</exec>
+		</sequential>
+	</macrodef>
+
+
+<!-- Targets -->
+	
+	<!-- Options for the compilationlevels:
+		WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS, ADVANCED_OPTIMIZATIONS" -->
 		
     <target name="clean" description="deletes all files created by this script">
     	<delete dir="${build.dir}" />
@@ -117,6 +144,10 @@
     		inputfile="templates/popup_window.soy"
     		outputPathFormat="${build.dir}/templates/popup_window.soy.js"
     		/>
+    </target>
+
+    <target name="gen_js_deps" description="generates deps.js">
+    	<depswriter outputFile="${build.dir}/deps.js" />
     </target>
 
 	<target name="rosegrid-compiled"

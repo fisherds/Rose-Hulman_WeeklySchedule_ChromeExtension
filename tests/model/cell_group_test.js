@@ -16,11 +16,12 @@ function setUp() {
   var t4 = {weekday: rosegrid.Weekday.TUESDAY, period: rosegrid.Period.FOURTH_HOUR};
   var r4 = {weekday: rosegrid.Weekday.THURSDAY, period: rosegrid.Period.FOURTH_HOUR};
   var mtr34 = [m3, t3, r3, m4, t4, r4];
-  me430Course = new rosegrid.model.Course(weekModel, mtr34, 'ME430', 'C111', '#33e', '#000');  
+  me430Course = new rosegrid.model.CellGroup(weekModel, mtr34, 'ME430', 'C111', '#33e', '#000');  
 
   var w9 = {weekday: rosegrid.Weekday.WEDNESDAY, period: rosegrid.Period.NINTH_HOUR};
-  csse490Course = new rosegrid.model.Course(weekModel, [w9], 'CSSE490', 'F217', '#281', '#fff');
+  csse490Course = new rosegrid.model.CellGroup(weekModel, [w9], 'CSSE490', 'F217', '#281', '#fff');
 }
 
 function testBasicInitialization() {
+
 }

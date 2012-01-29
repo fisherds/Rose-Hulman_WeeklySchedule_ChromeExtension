@@ -1,6 +1,8 @@
 /**
  * @fileoverview Holds the data to represent a day of classes.
  *   An array of 10 rosegrid.model.Cell objects.
+ *   
+ * @author fisherds@gmail.com (Dave Fisher)
  */
 
 goog.provide('rosegrid.model.Day');

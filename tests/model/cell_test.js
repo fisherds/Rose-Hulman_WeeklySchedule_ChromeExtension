@@ -8,7 +8,7 @@ var me430Cell;
 
 function setUp() {
   blankCell = new rosegrid.model.Cell();
-  me430Cell = new rosegrid.model.Cell(null, 'ME430 Mechatronics', 'C111');
+  me430Cell = new rosegrid.model.Cell('ME430 Mechatronics', 'C111');
 }
 
 function testCellModel() {
@@ -27,4 +27,10 @@ function testSetProperties() {
   assertEquals('DL201', blankCell.roomNumber);
   assertEquals('Test 2', me430Cell.courseName);
   assertEquals('C111', me430Cell.roomNumber);
+}
+
+function testClear() {
+  me430Cell.clear();
+  assertEquals('', me430Cell.courseName);
+  assertEquals('', me430Cell.roomNumber);
 }

@@ -11,7 +11,7 @@ function setUp() {
   var cellModels = [];
   for (var i = 0; i < 10 ; i++) {
     if (i == rosegrid.Period.THIRD_HOUR || i == rosegrid.Period.FOURTH_HOUR) {
-      cellModels.push(new rosegrid.model.Cell(null, 'ME430 Mechatronics', 'C111'));
+      cellModels.push(new rosegrid.model.Cell('ME430 Mechatronics', 'C111'));
     } else {
       cellModels.push(new rosegrid.model.Cell());
     }

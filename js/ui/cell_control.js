@@ -1,7 +1,7 @@
 /**
  * @fileOverview Control subclass that serves as an individual cell in the grid.
- *
- * @author David Fisher (fisherds@gmail.com)
+ *   
+ * @author fisherds@gmail.com (Dave Fisher)
  */
 
 goog.provide('rosegrid.ui.CellControl');
