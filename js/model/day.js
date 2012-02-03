@@ -77,7 +77,7 @@ rosegrid.model.Day.prototype.getWeekday = function() {
 
 
 /**
- * @return {!Array.<rosegrid.model.Cell>}
+ * @return {Array.<rosegrid.model.Cell>}
  */
 rosegrid.model.Day.prototype.getCellModels = function() {
   return goog.array.clone(this.cellModels_);

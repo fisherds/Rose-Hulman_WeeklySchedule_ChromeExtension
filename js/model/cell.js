@@ -62,25 +62,14 @@ rosegrid.model.Cell.prototype.clear = function() {
 
 
 /**
- * Sets multiple properties of the model.Cell using the cellModelProperties.
- *   It's a set all properties that exist function.
- * @param {rosegrid.model.CellProperties=} cellModelProperties Object with new properties for the model.Cell.
+ * Sets the properties of the model.Cell using the cellModelProperties.
+ * @param {rosegrid.model.CellProperties} cellModelProperties Object with new properties for the model.Cell.
  */
 rosegrid.model.Cell.prototype.setProperties = function(cellModelProperties) {
-  if (cellModelProperties) {
-    if (!goog.string.isEmptySafe(cellModelProperties.courseName)) {
-      this.courseName = cellModelProperties.courseName;
-    }
-    if (!goog.string.isEmptySafe(cellModelProperties.roomNumber)) {
-      this.roomNumber = cellModelProperties.roomNumber;
-    }
-    if (!goog.string.isEmptySafe(cellModelProperties.cellBackgroundColor)) {
-      this.cellBackgroundColor = cellModelProperties.cellBackgroundColor;
-    }
-    if (!goog.string.isEmptySafe(cellModelProperties.cellTextColor)) {
-      this.cellTextColor = cellModelProperties.cellTextColor;
-    }    
-  }
+  this.courseName = cellModelProperties.getCourseName();
+  this.roomNumber = cellModelProperties.getRoomNumber();
+  this.cellBackgroundColor = cellModelProperties.getCellBackgroundColor();
+  this.cellTextColor = cellModelProperties.getCellTextColor();
 };
 
 /** @inheritDoc */

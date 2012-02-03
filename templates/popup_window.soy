@@ -3,13 +3,13 @@
  * Author: fisherds@gmail.com (Dave Fisher)
  */
 
-{namespace rosegrid.templates}
+{namespace rosegrid.templates.popup}
 
 /**
  * Loads the full body of the Popup window page.
  * @param days A list of strings holding the days of the week.
  */
-{template .popupWindowBody}
+{template .body}
   {call .topBar /}
   {call .gridTable data="all" /}
 {/template}
@@ -99,14 +99,4 @@
     <div class={css room-number}></div>
   </div>
 </div>
-{/template}
-
-/**
- * Dialog box for creating and editing a course.
- */
-{template .courseInfoDialog}
-<form>
-  Course name: <input id="dialog-course-name" type="text"><br>
-  Room number: <input id="dialog-room-number" type="text"><br>
-</form>
 {/template}

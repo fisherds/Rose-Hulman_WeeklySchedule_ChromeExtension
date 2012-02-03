@@ -146,6 +146,14 @@
     		/>
     </target>
 
+    <target name="course-dialog-soy" description="generates course_dialog.soy.js">
+		<mkdir dir="${build.dir}/templates" />
+    	<generate-template
+    		inputfile="templates/course_dialog.soy"
+    		outputPathFormat="${build.dir}/templates/course_dialog.soy.js"
+    		/>
+    </target>
+
     <target name="gen_js_deps" description="generates deps.js">
     	<depswriter outputFile="${build.dir}/deps.js" />
     </target>

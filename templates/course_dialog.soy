@@ -1,0 +1,103 @@
+/*
+ * Builds up the html used within the course dialog box.
+ * Author: fisherds@gmail.com (Dave Fisher)
+ */
+
+{namespace rosegrid.templates.courseDialog}
+
+/**
+ * Dialog box for creating and editing a course.
+ */
+{template .dialogTabBar}
+<div id="dialog-tabbar" class="goog-tab-bar goog-tab-bar-start">
+  <div class="goog-tab goog-tab-selected">Course</div>
+  <div class="goog-tab">Schedule</div>
+</div>
+<div id="dialog-tabbar-content" class="goog-tab-content">
+  {call .course /}
+</div>
+{/template}
+
+/**
+ * Dialog box for creating and editing a course.
+ */
+{template .course}
+<form>
+<div class={css dialog-course-info}>
+  <span class={css dialog-course-info-label}>
+    Course number
+  </span>
+  <input type="text" class={css dialog-course-info-text-input} id="dialog-course-number-text-input">
+</div>
+<div class={css dialog-course-info}>
+  <span class={css dialog-course-info-label}>
+    Section
+  </span>
+  <input type="text" class={css dialog-course-info-text-input} id="dialog-section-text-input">
+</div>
+<div id="dialog-course-color">Course<br>color</div>
+<hr>
+{call .cellGroupDisplayText /}
+</form>
+<div id="add-cell-group">+ Add label</div>
+{/template}
+
+/**
+ * Dialog box for creating and editing a course.
+ */
+{template .cellGroupDisplayText}
+<div class={css dialog-cell-group}>
+  <span class={css dialog-cell-group-label}>
+    Display name
+  </span>
+  <input type="text" class={css dialog-cell-group-text-input}>
+</div>
+<div class={css dialog-cell-group}>
+  <span class={css dialog-cell-group-label}>
+    Room number
+  </span>
+  <input type="text" class={css dialog-cell-group-text-input}>
+</div>
+<hr>
+{/template}
+
+/**
+ * Dialog box for creating and editing a course.
+ */
+{template .schedule}
+  {call .cellGroupFieldset /}
+{/template}
+
+/**
+ * Dialog box for creating and editing a course.
+ */
+{template .cellGroupFieldset}
+<select id="dialog-add-weekday">
+<option>Monday</option>
+<option>Tuesday</option>
+<option>Wednesday</option>
+<option>Thursday</option>
+<option>Friday</option>
+</select>
+<select id="dialog-add-period">
+<option>1st</option>
+<option>2nd</option>
+<option>3rd</option>
+<option>4th</option>
+<option>5th</option>
+<option>6th</option>
+<option>7th</option>
+<option>8th</option>
+<option>9th</option>
+<option>10th</option>
+</select>
+<div style="text-align: right;"><button>Add</button> </div>
+<ul>
+  <li>Monday 5th</li>
+  <li>Tuesday 5th</li>
+  <li>Thursday 5th</li>
+  <li>Friday 5th</li>
+</ul>
+{/template}
+
+

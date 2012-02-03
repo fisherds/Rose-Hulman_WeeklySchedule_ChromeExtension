@@ -16,13 +16,21 @@ goog.require('rosegrid.model.Cell');
 /**
  * Control that displays a single cell in the Rose grid.
  *
- * @param {rosegrid.model.Cell=} cellModel 
+ * @param {rosegrid.model.Cell} cellModel 
  * @param {goog.ui.ControlRenderer=} renderer
  * @constructor
  * @extends {goog.ui.Control}
  */
 rosegrid.ui.CellControl = function(cellModel, renderer) {
 
+  if (!renderer) {
+    renderer = goog.ui.ControlRenderer.getCustomRenderer(goog.ui.ControlRenderer, 'rg-cell');
+  }
+  goog.base(this, null /* content */, renderer);
+  this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
+  this.setSupportedState(goog.ui.Component.State.DISABLED, false);
+  
+  
   /**
    * Div that holds the contents in the top of the cell.
    * @type {Element}
@@ -41,18 +49,10 @@ rosegrid.ui.CellControl = function(cellModel, renderer) {
    */
   this.parentCellTd;
   
-  if (!renderer) {
-    renderer = goog.ui.ControlRenderer.getCustomRenderer(goog.ui.ControlRenderer, 'rg-cell');
-  }
-  goog.base(this, null /* content */, renderer);
-  this.setSupportedState(goog.ui.Component.State.FOCUSED, false);
-  this.setSupportedState(goog.ui.Component.State.DISABLED, false);
   
-  if (!cellModel) {
-    //cellModel = {courseName: '', roomNumber: ''};
-    cellModel = new rosegrid.model.Cell();
-    // TODO: Log a warning if this default property is used.
-  }
+//  if (!cellModel) {
+//    cellModel = new rosegrid.model.Cell();
+//  }
   this.setModel(cellModel);
 };
 goog.inherits(rosegrid.ui.CellControl, goog.ui.Control);
@@ -68,7 +68,7 @@ rosegrid.ui.CellControl.prototype.getModel;
 /** @inheritDoc */
 rosegrid.ui.CellControl.prototype.createDom = function() {
   goog.base(this, 'createDom');
-  goog.soy.renderElement(this.getElement(), rosegrid.templates.gridCell);
+  goog.soy.renderElement(this.getElement(), rosegrid.templates.popup.gridCell);
 };
 
 
@@ -77,7 +77,7 @@ rosegrid.ui.CellControl.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
   this.courseNameDiv = goog.dom.getElementsByTagNameAndClass('div', 'course-name', this.getElement())[0];
   this.roomNumberDiv = goog.dom.getElementsByTagNameAndClass('div', 'room-number', this.getElement())[0];
-  //this.parentCellTd = this.getElement().parentNode;
+  this.parentCellTd = this.getElement().parentElement;
   
   this.updateDisplay();
 };
@@ -88,9 +88,14 @@ rosegrid.ui.CellControl.prototype.enterDocument = function() {
  * @param {rosegrid.model.CellProperties=} cellModelProperties Object with new properties for the model.Cell
  */
 rosegrid.ui.CellControl.prototype.updateDisplay = function(cellModelProperties) {
-  this.getModel().setProperties(cellModelProperties);
-  this.courseNameDiv.innerHTML = this.getModel().courseName;
-  this.roomNumberDiv.innerHTML = this.getModel().roomNumber;
+  if (cellModelProperties) {
+    this.getModel().setProperties(cellModelProperties);
+  }
+  this.courseNameDiv.innerHTML = this.getModel().getCourseName();
+  this.roomNumberDiv.innerHTML = this.getModel().getRoomNumber();
+  goog.style.setStyle(this.parentCellTd, 'background-color', this.getModel().getCellBackgroundColor());
+  goog.style.setStyle(this.courseNameDiv, 'color', this.getModel().getCellTextColor());
+  goog.style.setStyle(this.roomNumberDiv, 'color', this.getModel().getCellTextColor());
 };
 
 

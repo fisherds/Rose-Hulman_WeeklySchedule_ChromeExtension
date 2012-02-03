@@ -13,9 +13,9 @@ goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.events');
 goog.require('goog.soy');
-goog.require('goog.ui.Dialog');
-goog.require('rosegrid.templates');
+goog.require('rosegrid.templates.popup');
 goog.require('rosegrid.ui.CellControl');
+goog.require('rosegrid.ui.CourseEditor');
 goog.require('rosegrid.model.Week');
 
 
@@ -38,7 +38,13 @@ rosegrid.PopupWindow = function(container) {
 	 */	
 	this.activeCell;
 	
-    // CONSIDER: Might want to create an event handler for listener cleanup.
+	/**
+   * Dialog box to allow course creation and editing.
+   * @type {rosegrid.ui.CourseEditor} 
+   */ 
+  this.courseEditor;
+  
+  // CONSIDER: Might want to create an event handler for listener cleanup.
     
 	this.init_();
 };
@@ -53,13 +59,6 @@ rosegrid.PopupWindow.prototype.logger = goog.debug.Logger.getLogger('rosegrid.Po
 
 
 /**
- * Dialog displayed when creating or editing a course.
- * @type {goog.ui.Dialog}
- */
-rosegrid.PopupWindow.prototype.courseInfoDialog_ = new goog.ui.Dialog();
-
-
-/**
  * Loads Soy html, adds components to the page, and initializes the dialog box.
  */
 rosegrid.PopupWindow.prototype.init_ = function() {
@@ -67,7 +66,7 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	// Load the html using Soy
 	var daysOfTheWeek = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 	var soyData = {days: daysOfTheWeek};
-	goog.soy.renderElement(goog.dom.getElement('popup'), rosegrid.templates.popupWindowBody, soyData);
+	goog.soy.renderElement(goog.dom.getElement('popup'), rosegrid.templates.popup.body, soyData);
 
 	// Render all of the cell controls
 	// TODO: Use a container to reduce the number of listeners.
@@ -82,20 +81,14 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	}
 	
 	// Initialize the course info dialog.
-	this.courseInfoDialog_.setTitle('Add new course');
-    //this.courseInfoDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.OK_CANCEL);
-    this.courseInfoDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.createOkCancel());
+  this.courseEditor = new rosegrid.ui.CourseEditor();
     
-    
-    this.courseInfoDialog_.setContent(rosegrid.templates.courseInfoDialog());    
-    goog.events.listen(this.courseInfoDialog_, goog.ui.Dialog.EventType.SELECT, goog.bind(this.handleDialogClose_, this));
-    
-    // Initialize the logger.
+  // Initialize the logger.
 	//Log levels: shout, severe, warning, info, config, fine, finer, finest
-    goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
-    var logconsole = new goog.debug.Console();
-    logconsole.setCapturing(true);
-    
+  goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
+  var logconsole = new goog.debug.Console();
+  logconsole.setCapturing(true);
+  
 	this.logger.info('Total number of listeners = ' + goog.events.getTotalListenerCount());
 	// Originally 252 prior to adding a container
 };
@@ -111,48 +104,21 @@ rosegrid.PopupWindow.prototype.cellControlClickListener_ = function(e) {
   this.activeCell = /** @type {rosegrid.ui.CellControl} */ e.target;
   
   // Display the course info dialog
-  this.courseInfoDialog_.setVisible(true);
+  this.courseEditor.setVisible(true);
   
-  // Load values into the dialog text areas
-  var nameEl = goog.dom.getElement('dialog-course-name');
-  var roomEl = goog.dom.getElement('dialog-room-number');
-  if (nameEl) {
-    nameEl.value = this.activeCell.getModel().courseName;
-  } else {
-	this.logger.info('name value not set. nameEl = ' + nameEl);
-  }
-  if (roomEl) {
-    roomEl.value = this.activeCell.getModel().roomNumber;
-  } else {
-	this.logger.info('room value not set. roomEl = ' + roomEl);
-  }
+//  // Load values into the dialog text areas
+//  var nameEl = goog.dom.getElement('dialog-course-name');
+//  var roomEl = goog.dom.getElement('dialog-room-number');
+//  if (nameEl) {
+//    nameEl.value = this.activeCell.getModel().courseName;
+//  } else {
+//	this.logger.info('name value not set. nameEl = ' + nameEl);
+//  }
+//  if (roomEl) {
+//    roomEl.value = this.activeCell.getModel().roomNumber;
+//  } else {
+//	this.logger.info('room value not set. roomEl = ' + roomEl);
+//  }
 };
 
 
-/**
- * Handle a button press from the Dialog. 
- */
-rosegrid.PopupWindow.prototype.handleDialogClose_ = function(e) {
-  	var dialogEvent = /** type {goog.ui.Dialog.Event} */ (e);
-  	if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.OK) {
-  	  var nameValue = goog.dom.getElement('dialog-course-name').value;
-  	  var roomValue = goog.dom.getElement('dialog-room-number').value;
-  	  
-  	  // TODO: Figure out how to use the updateDisplay with the final system
-  	  this.activeCell.getModel().courseName = nameValue;
-  	  this.activeCell.getModel().roomNumber = roomValue;
-  	  
-  	  
-  	  //var newValues = {courseName: nameValue, roomNumber: roomValue};
-  	  this.activeCell.updateDisplay();
-  	  
-  	  
-    	} else if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.CANCEL) {
-    	  this.logger.info('Cancel pressed');
-    	} else {
-    	  this.logger.info('Unknown button');
-    	}
-    	
-
-	
-};

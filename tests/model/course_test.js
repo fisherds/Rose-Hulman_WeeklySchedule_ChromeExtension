@@ -3,24 +3,24 @@
  */
 
 /** Objects under test. */
-var me430CellGroup;
-var csse490CellGroup;
 var weekModel;
+var es203Course;
+var es203LectureCellGroup;
+var es203LabCellGroup;
+var m4 = {weekday: rosegrid.Weekday.MONDAY, period: rosegrid.Period.FOURTH_HOUR};
+var t4 = {weekday: rosegrid.Weekday.TUESDAY, period: rosegrid.Period.FOURTH_HOUR};
+var r4 = {weekday: rosegrid.Weekday.THURSDAY, period: rosegrid.Period.FOURTH_HOUR};
+var w7 = {weekday: rosegrid.Weekday.WEDNESDAY, period: rosegrid.Period.SEVENTH_HOUR};
+var w8 = {weekday: rosegrid.Weekday.WEDNESDAY, period: rosegrid.Period.EIGHTH_HOUR};
+var w9 = {weekday: rosegrid.Weekday.WEDNESDAY, period: rosegrid.Period.NINTH_HOUR};
 
 function setUp() {
   weekModel = new rosegrid.model.Week();
-  var m3 = {weekday: rosegrid.Weekday.MONDAY, period: rosegrid.Period.THIRD_HOUR};
-  var t3 = {weekday: rosegrid.Weekday.TUESDAY, period: rosegrid.Period.THIRD_HOUR};
-  var r3 = {weekday: rosegrid.Weekday.THURSDAY, period: rosegrid.Period.THIRD_HOUR};
-  var m4 = {weekday: rosegrid.Weekday.MONDAY, period: rosegrid.Period.FOURTH_HOUR};
-  var t4 = {weekday: rosegrid.Weekday.TUESDAY, period: rosegrid.Period.FOURTH_HOUR};
-  var r4 = {weekday: rosegrid.Weekday.THURSDAY, period: rosegrid.Period.FOURTH_HOUR};
-  var mtr34 = [m3, t3, r3, m4, t4, r4];
-  me430CellGroup = new rosegrid.model.CellGroup(weekModel, mtr34, 'ME430', 'C111', '#33e', '#000');  
-
-  var w9 = {weekday: rosegrid.Weekday.WEDNESDAY, period: rosegrid.Period.NINTH_HOUR};
-  csse490CellGroup = new rosegrid.model.CellGroup(weekModel, [w9], 'CSSE490', 'F217', '#281', '#fff');
+  es203LectureCellGroup = new rosegrid.model.CellGroup(weekModel, [m4, t4, r4], 'ES204 ESys', 'O257', '#800', '#fff');
+  es203LabCellGroup = new rosegrid.model.CellGroup(weekModel, [w7, w8, w9], 'ES204 ESys', 'C161', '#800', '#fff');
+  es203Course = new rosegrid.model.Course(weekModel, [es203LectureCellGroup, es203LabCellGroup]);
 }
 
 function testBasicInitialization() {
+  assertSameElements([es203LectureCellGroup, es203LabCellGroup], es203Course.getCellGroups());
 }

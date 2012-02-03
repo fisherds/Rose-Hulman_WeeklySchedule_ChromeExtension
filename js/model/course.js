@@ -6,18 +6,15 @@
 
 goog.provide('rosegrid.model.Course');
 
-goog.require('rosegrid.model.CellProperties');
+goog.require('rosegrid.model.CellGroup');
 
 /**
  *
  * @param {rosegrid.model.Week} weekModel the model object representing all the cell models
- * @param {Array.<rosegrid.CellIndex>} cellIndices list of the times this course meets
- * @param {string=} courseName title of the course to display
- * @param {string=} cellBackgroundColor color of the cells for this course
- * @param {string=} cellTextColor color of the text in the cells for this course
+ * @param {Array.<rosegrid.CellGroup>} cellGroups list of the cell groups holding the course meeting times
  * @constructor
  */
-rosegrid.model.Course = function(weekModel, courseName, cellBackgroundColor, cellTextColor) {
+rosegrid.model.Course = function(weekModel, cellGroups) {
 
   /**
    * Reference to the complete week of cell models
@@ -26,30 +23,16 @@ rosegrid.model.Course = function(weekModel, courseName, cellBackgroundColor, cel
   this.weekModel_ = weekModel;
 
   /**
-   * Holds name for this course.
-   * @type {string}
+   * List of the cell groups holding the course meeting times.
+   * @type {Array.<rosegrid.CellGroup>}
    */
-  this.courseName_ = courseName || '';
-
-
-  /**
-   * Cell background color hexString.
-   * @type {string}
-   */
-  this.cellBackgroundColor_ = cellBackgroundColor || '#fff';
-
-  /**
-   * Cell text color hexString.
-   * @type {string}
-   */
-  this.cellTextColor_ = cellTextColor || '#000';
-  
+  this.cellGroups_ = cellGroups;
 };
 
-
 /**
- * 
+ * Returns a clone of the Array of cell groups.
+ * @returns {Array.<rosegrid.CellGroup>}
  */
-rosegrid.model.Course.prototype.updateAllCellGroups = function() {
-
+rosegrid.model.Course.prototype.getCellGroups = function() {
+  return goog.array.clone(this.cellGroups_);
 };

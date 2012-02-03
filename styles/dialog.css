@@ -68,3 +68,68 @@
 .goog-buttonset-default {
   font-weight: bold;
 }
+
+/**********************************************************************************
+ * Tab bar
+ *********************************************************************************/
+#dialog-tabbar-content {
+  width: 350px;
+  height: 180px;
+  padding: 0 10px;
+  overflow: hidden;
+  font:14px arial,sans-serif;
+}
+
+/**********************************************************************************
+ * Course Tab
+ *********************************************************************************/
+.dialog-course-info-label {
+  font-weight:bold; 
+  display: inline-block;
+  min-width: 125px;
+  margin-left: 5px;
+}
+.dialog-course-info-text-input {
+  margin-left: 5px;
+  width: 100px;
+}
+
+#dialog-course-color {
+  border: solid 1px; 
+  padding: 5px 15px; 
+  background-color: rgb(0, 238, 0);
+  text-align: center;
+  position: absolute;
+  top: 48px;
+  right: 10px;
+}
+
+hr {
+  margin: 3px 0px;
+}
+
+/**********************************************************************************
+ * Course Tab - Cell Group
+ *********************************************************************************/
+.dialog-cell-group-label {
+  display: inline-block;
+  margin: 0 15px;
+  min-width: 100px;
+}
+.dialog-cell-group-text-input {
+  width: 200px;
+  margin-left: 5px;
+}
+
+#add-cell-group {
+  display: block;
+  margin: 2px;
+  text-align: right;
+  color: #ccc;
+  font-size: 12px; 
+}
+
+/**********************************************************************************
+ * Schedule Tab
+ *********************************************************************************/
+ 
