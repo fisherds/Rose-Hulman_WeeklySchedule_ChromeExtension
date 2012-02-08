@@ -40,15 +40,28 @@ rosegrid.model.Cell = function(courseName, roomNumber, cellBackgroundColor, cell
    * Cell background color hexString.
    * @type {string}
    */
-  this.cellBackgroundColor = cellBackgroundColor || '#fff';
+  this.cellBackgroundColor = cellBackgroundColor || rosegrid.model.Cell.DEFAULT_BACKGROUND_COLOR;
 
   /**
    * Cell text color hexString.
    * @type {string}
    */
-  this.cellTextColor = cellTextColor || '#000';
+  this.cellTextColor = cellTextColor || rosegrid.model.Cell.DEFAULT_TEXT_COLOR;
 };
 
+/**
+ * Default cell background color hexString (white).
+ * @type {string}
+ * @const
+ */
+rosegrid.model.Cell.DEFAULT_BACKGROUND_COLOR = '#fff';
+
+/**
+ * Default cell text color hexString (black).
+ * @type {string}
+ * @const
+ */
+rosegrid.model.Cell.DEFAULT_TEXT_COLOR = '#000';
 
 /**
  * Resets the values of the cell to default values.

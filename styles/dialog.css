@@ -48,6 +48,10 @@
   position: relative;
 }
 
+.modal-dialog-title-text {
+  font:bold 22px arial,sans-serif;
+}
+
 .modal-dialog-title-close {
   /* Client apps may override the URL at which they serve the sprite. */
   background: #e0edfe url(editortoolbar.png) no-repeat -528px 0;
@@ -74,24 +78,36 @@
  *********************************************************************************/
 #dialog-tabbar-content {
   width: 350px;
-  height: 180px;
+  height: 185px;
   padding: 0 10px;
   overflow: hidden;
   font:14px arial,sans-serif;
 }
 
+#dialog-tabbar {
+  font:16px arial,sans-serif;
+}
+
 /**********************************************************************************
  * Course Tab
  *********************************************************************************/
+
+.dialog-course-info {
+  background-color: #e8e8e8;
+  padding: 2px 20px 1px 0;
+  display: inline-block;
+}
+
 .dialog-course-info-label {
   font-weight:bold; 
+  font-size: 15px;
   display: inline-block;
   min-width: 125px;
   margin-left: 5px;
 }
 .dialog-course-info-text-input {
   margin-left: 5px;
-  width: 100px;
+  width: 110px;
 }
 
 #dialog-course-color {
@@ -99,9 +115,10 @@
   padding: 5px 15px; 
   background-color: rgb(0, 238, 0);
   text-align: center;
+  font-weight:bold; 
   position: absolute;
-  top: 48px;
-  right: 10px;
+  top: 57px;
+  right: 12px;
 }
 
 hr {
@@ -111,13 +128,19 @@ hr {
 /**********************************************************************************
  * Course Tab - Cell Group
  *********************************************************************************/
+#dialog-cell-groups {
+  height: 125px;
+  overflow: auto;
+}
+
 .dialog-cell-group-label {
   display: inline-block;
-  margin: 0 15px;
+  margin: 0 10px;
   min-width: 100px;
 }
+
 .dialog-cell-group-text-input {
-  width: 200px;
+  width: 180px;
   margin-left: 5px;
 }
 
@@ -125,11 +148,13 @@ hr {
   display: block;
   margin: 2px;
   text-align: right;
-  color: #ccc;
-  font-size: 12px; 
+  color: #777;
+  font-weight:bold; 
+  font-size: 13px; 
 }
 
 /**********************************************************************************
  * Schedule Tab
  *********************************************************************************/
- 
+.dialog-button {
+}

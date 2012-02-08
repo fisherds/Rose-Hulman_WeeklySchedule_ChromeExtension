@@ -6,40 +6,16 @@
  */
 
 goog.provide('rosegrid.model.Day');
-goog.provide('rosegrid.Period');
-goog.provide('rosegrid.Weekday');
 
 goog.require('goog.array');
+goog.require('rosegrid.model.Weekday');
+goog.require('rosegrid.model.Period');
 goog.require('rosegrid.model.Cell');
 
 
-/** @enum {number} */
-rosegrid.Weekday = {
-  MONDAY: 0,
-  TUESDAY: 1,
-  WEDNESDAY: 2,
-  THURSDAY: 3,
-  FRIDAY: 4
-};
-
-
-/** @enum {number} */
-rosegrid.Period = {
-  FIRST_HOUR: 0,
-  SECOND_HOUR: 1,
-  THIRD_HOUR: 2,
-  FOURTH_HOUR: 3,
-  FIFTH_HOUR: 4,
-  SIXTH_HOUR: 5,
-  SEVENTH_HOUR: 6,
-  EIGHTH_HOUR: 7,
-  NINTH_HOUR: 8,
-  TENTH_HOUR: 9
-};
-
 
 /**
- * @param {rosegrid.Weekday} weekday The day of the week
+ * @param {rosegrid.model.Weekday} weekday The day of the week
  * @param {Array.<rosegrid.model.Cell>=} items The cells in this day
  * @constructor
  */
@@ -57,7 +33,7 @@ rosegrid.model.Day = function(weekday, items) {
   }
 
   /**
-   * @type {rosegrid.Weekday}
+   * @type {rosegrid.model.Weekday}
    */
    this.weekday_ = weekday;
    
@@ -69,7 +45,7 @@ rosegrid.model.Day = function(weekday, items) {
 
 
 /**
- * @return {rosegrid.Weekday}
+ * @return {rosegrid.model.Weekday}
  */
 rosegrid.model.Day.prototype.getWeekday = function() {
   return this.weekday_;
@@ -85,7 +61,7 @@ rosegrid.model.Day.prototype.getCellModels = function() {
 
 
 /**
- * @param {number} period Zero based, index 0 = 1st Period
+ * @param {rosegrid.model.Period} period Zero based, index 0 = 1st Period
  * @return {rosegrid.model.Cell}
  */
 rosegrid.model.Day.prototype.getCellModel = function(period) {

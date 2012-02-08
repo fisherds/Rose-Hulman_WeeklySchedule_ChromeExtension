@@ -8,9 +8,14 @@
 goog.provide('rosegrid.model.CellGroup');
 
 goog.require('rosegrid.model.Cell');
+goog.require('rosegrid.model.CellIndex');
 goog.require('rosegrid.model.CellProperties');
 goog.require('rosegrid.model.Day');
+goog.require('rosegrid.model.Period');
 goog.require('rosegrid.model.Week');
+goog.require('rosegrid.model.Weekday');
+
+
 
 /**
  * Creates a governing object that controls the properties of a cell model group.
@@ -19,16 +24,16 @@ goog.require('rosegrid.model.Week');
  * One CellGroup for the class meeting times and another CellGroup for the lab cells.
  *
  * @param {rosegrid.model.Week} weekModel the model object representing all the cell models
- * @param {Array.<rosegrid.CellIndex>} cellIndices list of the cells in this group
- * @param {string=} courseName title of the course to display
- * @param {string=} roomNumber location for the course to display
  * @param {string=} cellBackgroundColor color of the cells for this course
  * @param {string=} cellTextColor color of the text in the cells for this course
+ * @param {Array.<rosegrid.model.CellIndex>=} cellIndices list of the cells in this group
+ * @param {string=} courseName title of the course to display
+ * @param {string=} roomNumber location for the course to display
  * @constructor
  * @implements {rosegrid.model.CellProperties}
  */
-rosegrid.model.CellGroup = function(weekModel, cellIndices,
-    courseName, roomNumber, cellBackgroundColor, cellTextColor) {
+rosegrid.model.CellGroup = function(weekModel, cellBackgroundColor, cellTextColor,
+    cellIndices, courseName, roomNumber) {
 
   /**
    * Reference to the complete week of cell models
@@ -38,11 +43,23 @@ rosegrid.model.CellGroup = function(weekModel, cellIndices,
   this.weekModel_ = weekModel;
 
   /**
+   * Cell background color hexString.
+   * @type {string}
+   */
+  this.cellBackgroundColor = cellBackgroundColor || rosegrid.model.Cell.DEFAULT_BACKGROUND_COLOR;
+
+  /**
+   * Cell text color hexString.
+   * @type {string}
+   */
+  this.cellTextColor = cellTextColor || rosegrid.model.Cell.DEFAULT_TEXT_COLOR;
+
+  /**
    * Meeting times for this course.
-   * @type {Array.<rosegrid.CellIndex>}
+   * @type {Array.<rosegrid.model.CellIndex>}
    * @private
    */
-  this.cellIndices_ = cellIndices;
+  this.cellIndices_ = cellIndices || [];
   
   /**
    * Holds name for this course.
@@ -55,18 +72,6 @@ rosegrid.model.CellGroup = function(weekModel, cellIndices,
    * @type {string}
    */
   this.roomNumber = roomNumber || '';
-
-  /**
-   * Cell background color hexString.
-   * @type {string}
-   */
-  this.cellBackgroundColor = cellBackgroundColor || '#fff';
-
-  /**
-   * Cell text color hexString.
-   * @type {string}
-   */
-  this.cellTextColor = cellTextColor || '#000';
   
   this.updateAllCellModels();
 };
@@ -74,7 +79,7 @@ rosegrid.model.CellGroup = function(weekModel, cellIndices,
 /**
  * Adds these CellIndex objects to the group and updates all cell models to current properties.
  * 
- * @param {Array.<rosegrid.CellIndex>} newCellIndices CellIndex objects to add to this group
+ * @param {Array.<rosegrid.model.CellIndex>} newCellIndices CellIndex objects to add to this group
  */
 rosegrid.model.CellGroup.prototype.addCellModels = function(newCellIndices) {
   for (var i = 0; i < newCellIndices.length; i++) {
@@ -83,7 +88,7 @@ rosegrid.model.CellGroup.prototype.addCellModels = function(newCellIndices) {
       this.cellIndices_.push(newCellIndices[i]);
     }
     // The findCellIndex approach is not efficient, but effective.
-    // goog.array.insert would add items different objects even if they had equal properties.
+    // goog.array.insert would add items that were different objects even if they had equal properties.
   }
   this.updateAllCellModels(); // Could've just updated the new cells, but updating all cell models.
 };
@@ -91,7 +96,7 @@ rosegrid.model.CellGroup.prototype.addCellModels = function(newCellIndices) {
 /**
  * Removes the CellIndex objects from the group and resets those cells.
  * 
- * @param {Array.<rosegrid.CellIndex>} removeCellIndices CellIndex objects to remove
+ * @param {Array.<rosegrid.model.CellIndex>} removeCellIndices CellIndex objects to remove
  */
 rosegrid.model.CellGroup.prototype.removeCellModels = function(removeCellIndices) {
   for (var i = 0; i < removeCellIndices.length; i++) {
@@ -123,12 +128,11 @@ rosegrid.model.CellGroup.prototype.updateAllCellModels = function() {
  * Returns the index of the cell index.  Uses the actual values of the cell index and
  * matches the values (not just matching if it is the same object).
  * 
- * @param {rosegrid.CellIndex} cellIndex CellIndex to use as the search value 
+ * @param {rosegrid.model.CellIndex} cellIndex CellIndex to use as the search value 
  */
 rosegrid.model.CellGroup.prototype.findCellIndex = function(cellIndex) {
   for (var i = 0; i < this.cellIndices_.length; i++) {
-    if (this.cellIndices_[i].weekday == cellIndex.weekday &&
-            this.cellIndices_[i].period == cellIndex.period) {
+    if (this.cellIndices_[i].equals(cellIndex)) {
       return i;
     }
   }
@@ -136,8 +140,19 @@ rosegrid.model.CellGroup.prototype.findCellIndex = function(cellIndex) {
 };
 
 /**
+ * Determines if the cellIndex is contained in this cell group.
+ * 
+ * @param {rosegrid.model.CellIndex} cellIndex 
+ * @returns {boolean}
+ */
+rosegrid.model.CellGroup.prototype.contains = function(cellIndex) {
+  return this.findCellIndex(cellIndex) != -1;
+};
+
+
+/**
  * Returns a copy of the cell indices managed by this cell group.
- * @returns {!Array.<rosegrid.CellIndex>}
+ * @returns {!Array.<rosegrid.model.CellIndex>}
  */
 rosegrid.model.CellGroup.prototype.getCellIndices = function() {
   return goog.array.clone(this.cellIndices_);

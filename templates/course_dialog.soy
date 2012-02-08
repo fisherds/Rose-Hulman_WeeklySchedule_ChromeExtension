@@ -7,71 +7,101 @@
 
 /**
  * Dialog box for creating and editing a course.
+ * @param course course that is being edited
  */
 {template .dialogTabBar}
 <div id="dialog-tabbar" class="goog-tab-bar goog-tab-bar-start">
   <div class="goog-tab goog-tab-selected">Course</div>
-  <div class="goog-tab">Schedule</div>
+  {for $i in range( length($course.cellGroups_) )}
+    {if $course.cellGroups_[$i].courseName}
+      <div id="dialog-tab-cell-group-{print $i}" class="{css goog-tab}">{print $course.cellGroups_[$i].courseName}</div>
+    {else}
+      <div id="dialog-tab-cell-group-{print $i}" class="{css goog-tab}">Schedule</div>
+    {/if}
+  {/for}
 </div>
 <div id="dialog-tabbar-content" class="goog-tab-content">
-  {call .course /}
+  {call .courseTab data="$course" /}
 </div>
 {/template}
 
+
 /**
- * Dialog box for creating and editing a course.
+ * Display information in the Course tab.
+ *
+ * @param officialCourseNumber
+ * @param officialCourseSection
+ * @param courseBackgroundColor
+ * @param courseTextColor
+ * @param cellGroups_
  */
-{template .course}
+{template .courseTab}
 <form>
 <div class={css dialog-course-info}>
   <span class={css dialog-course-info-label}>
     Course number
   </span>
-  <input type="text" class={css dialog-course-info-text-input} id="dialog-course-number-text-input">
+  <input type="text" class={css dialog-course-info-text-input} id="dialog-course-number-text-input" value="{print $officialCourseNumber}">
 </div>
 <div class={css dialog-course-info}>
   <span class={css dialog-course-info-label}>
     Section
   </span>
-  <input type="text" class={css dialog-course-info-text-input} id="dialog-section-text-input">
+  <input type="text" class={css dialog-course-info-text-input} id="dialog-section-text-input" value="{print $officialCourseSection}">
 </div>
-<div id="dialog-course-color">Course<br>color</div>
+<div id="dialog-course-color" style="background-color: {print $courseBackgroundColor}; color: {print $courseTextColor};">Course<br>color</div>
 <hr>
-{call .cellGroupDisplayText /}
+<div id="dialog-cell-groups">
+  {foreach $cellGroup in $cellGroups_}
+    {call .cellGroupDisplayText data="$cellGroup" /}
+  {/foreach}
+  <div id="add-cell-group">+ Add label</div>
+<div>
 </form>
-<div id="add-cell-group">+ Add label</div>
 {/template}
 
 /**
- * Dialog box for creating and editing a course.
+ * Within Course tab - Cell Group titles area
+ * @param courseName display name for this cell group
+ * @param roomNumber display room number for this cell group
  */
 {template .cellGroupDisplayText}
 <div class={css dialog-cell-group}>
   <span class={css dialog-cell-group-label}>
     Display name
   </span>
-  <input type="text" class={css dialog-cell-group-text-input}>
+  <input type="text" class="{css dialog-cell-group-text-input}" value="{print $courseName}">
 </div>
 <div class={css dialog-cell-group}>
   <span class={css dialog-cell-group-label}>
     Room number
   </span>
-  <input type="text" class={css dialog-cell-group-text-input}>
+  <input type="text" class="{css dialog-cell-group-text-input}" value="{print $roomNumber}">
 </div>
 <hr>
 {/template}
 
 /**
- * Dialog box for creating and editing a course.
+ * Schedule for a cell group tab
+ *
+ * @param cellIndices_ meeting times for this course
+ * @param courseName display name for this cell group
  */
-{template .schedule}
-  {call .cellGroupFieldset /}
+{template .cellGroupScheduleTab}
+  <div dialog-schedule-title>{print $courseName} meeting times:</div>
+  {call .addButtons /}
+  <div>
+  {foreach $cellIndex in $cellIndices_}
+    {call .meetingTime data="$cellIndex" /}
+  {/foreach}
+  </div>
 {/template}
 
 /**
- * Dialog box for creating and editing a course.
+ * Select elements and a button to add an additional meeting time 
  */
-{template .cellGroupFieldset}
+{template .addButtons}
+<div>
 <select id="dialog-add-weekday">
 <option>Monday</option>
 <option>Tuesday</option>
@@ -91,13 +121,85 @@
 <option>9th</option>
 <option>10th</option>
 </select>
-<div style="text-align: right;"><button>Add</button> </div>
-<ul>
-  <li>Monday 5th</li>
-  <li>Tuesday 5th</li>
-  <li>Thursday 5th</li>
-  <li>Friday 5th</li>
-</ul>
+<div class="dialog-button" id="dialog-add-button">Add</div>
+</div>
 {/template}
 
+/**
+ * Display an individual cell index along with a delete button.
+ * @param weekday
+ * @param period
+ */
+{template .meetingTime}
+<div>
+  <span class="dialog-cell-index-delete-button">
+    <img src="../images/x_icon.png" alt="x">
+  </span>
+  <span class="dialog-cell-index-text">
+    {call .displayCellIndex data="all" /}
+  </span>
+</div>
+{/template}
 
+/**
+ * Text to display a cell index.
+ * @param weekday
+ * @param period
+ */
+{template .displayCellIndex}
+{call .displayWeekday}
+  {param weekday: $weekday /}
+{/call}
+,{sp}
+{call .displayPeriod}
+  {param period: $period /}
+{/call}
+{/template}
+
+/**
+ * Prints the weekday as a string
+ * @param weekday Numerical value of the weekday
+ */
+{template .displayWeekday}
+{switch $weekday}
+  {case 0}
+    Monday
+  {case 1}
+    Tuesday
+  {case 2}
+    Wednesday
+  {case 3}
+    Thursday
+  {case 4}
+    Friday
+{/switch}
+{/template}
+
+/**
+ * Prints the period as a string
+ * @param period Numerical value of the hour
+ */
+{template .displayPeriod}
+{switch $period}
+  {case 0}
+    1st hour
+  {case 1}
+    2nd hour
+  {case 2}
+    3rd hour
+  {case 3}
+    4th hour
+  {case 4}
+    5th hour
+  {case 5}
+    6th hour
+  {case 6}
+    7th hour
+  {case 7}
+    8th hour
+  {case 8}
+    9th hour
+  {case 9}
+    10th hour
+{/switch}
+{/template}

@@ -16,7 +16,8 @@ goog.require('goog.soy');
 goog.require('rosegrid.templates.popup');
 goog.require('rosegrid.ui.CellControl');
 goog.require('rosegrid.ui.CourseEditor');
-goog.require('rosegrid.model.Week');
+goog.require('rosegrid.model.QuarterSchedule');
+
 
 
 
@@ -24,21 +25,29 @@ goog.require('rosegrid.model.Week');
  * Controller for the extension's Popup window.
  * @constructor
  */
-rosegrid.PopupWindow = function(container) {
-	
-	/**
-	 * Holds the model objects for the weekly schedule.
-	 * @type {rosegrid.model.Week} 
-	 */	
-	this.weekModel = new rosegrid.model.Week();
-	
-	/**
-	 * Holds the model objects for the weekly schedule.
-	 * @type {rosegrid.ui.CellControl} 
-	 */	
-	this.activeCell;
-	
-	/**
+rosegrid.PopupWindow = function() {
+
+  /**
+   * Holds the courses that are in this quarter's schedule.
+   * @type {rosegrid.model.QuarterSchedule} 
+   */ 
+  this.quarterSchedule = rosegrid.model.QuarterSchedule.getInstance();
+  
+  /**
+   * Holds the model objects for the weekly schedule.
+   * Just a convenience 
+   * @type {rosegrid.model.Week} 
+   */ 
+  this.weekModel = this.quarterSchedule.getWeekModel();
+  
+  /**
+   * List of all the Control objects in the grid.
+   * @type {Array.<rosegrid.ui.CellControl>} 
+   */ 
+  this.cellControls = [];
+  // CONSIDER: These might all be held by the table container and a list here might be unnecessary.
+
+  /**
    * Dialog box to allow course creation and editing.
    * @type {rosegrid.ui.CourseEditor} 
    */ 
@@ -75,14 +84,18 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	for (var i = 0; i < buttons.length; i++) {
 		var button = buttons[i];
 		var control = new rosegrid.ui.CellControl( this.weekModel.getCellModelByIndex(i) );
+		this.cellControls.push(control);
 		control.render(button);
 		goog.events.listen(control, goog.ui.Component.EventType.ACTION,
 		    goog.bind(this.cellControlClickListener_, this));
 	}
 	
 	// Initialize the course info dialog.
-  this.courseEditor = new rosegrid.ui.CourseEditor();
-    
+
+  for (var i = 0; i < this.cellControls.length; i++) {
+    this.cellControls[i].updateDisplay();
+  }
+  
   // Initialize the logger.
 	//Log levels: shout, severe, warning, info, config, fine, finer, finest
   goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
@@ -91,6 +104,8 @@ rosegrid.PopupWindow.prototype.init_ = function() {
   
 	this.logger.info('Total number of listeners = ' + goog.events.getTotalListenerCount());
 	// Originally 252 prior to adding a container
+	
+	this.quarterSchedule.loadSavedCourses();
 };
 
 
@@ -99,26 +114,12 @@ rosegrid.PopupWindow.prototype.init_ = function() {
  * @param {goog.events.Event} e Event from the cell-control
  */
 rosegrid.PopupWindow.prototype.cellControlClickListener_ = function(e) {
-
-  // Capture which cell was clicked
-  this.activeCell = /** @type {rosegrid.ui.CellControl} */ e.target;
+  if (this.courseEditor == null) {
+    this.courseEditor = new rosegrid.ui.CourseEditor();  
+  }
   
-  // Display the course info dialog
+  // Figure up the course that was clicked and pass it along
+  this.quarterSchedule.getCourseAtIndex();
+  
   this.courseEditor.setVisible(true);
-  
-//  // Load values into the dialog text areas
-//  var nameEl = goog.dom.getElement('dialog-course-name');
-//  var roomEl = goog.dom.getElement('dialog-room-number');
-//  if (nameEl) {
-//    nameEl.value = this.activeCell.getModel().courseName;
-//  } else {
-//	this.logger.info('name value not set. nameEl = ' + nameEl);
-//  }
-//  if (roomEl) {
-//    roomEl.value = this.activeCell.getModel().roomNumber;
-//  } else {
-//	this.logger.info('room value not set. roomEl = ' + roomEl);
-//  }
 };
-
-

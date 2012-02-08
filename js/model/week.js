@@ -6,18 +6,12 @@
  */
 
 goog.provide('rosegrid.model.Week');
-goog.provide('rosegrid.CellIndex');
 
 goog.require('goog.array');
 goog.require('rosegrid.model.Cell');
 goog.require('rosegrid.model.Day');
-goog.require('rosegrid.Period');
-goog.require('rosegrid.Weekday');
-
-
-
-/** @typedef {{weekday: rosegrid.Weekday, period: rosegrid.Period}} */
-rosegrid.CellIndex;
+goog.require('rosegrid.model.Period');
+goog.require('rosegrid.model.Weekday');
 
 
 /**
@@ -29,11 +23,11 @@ rosegrid.model.Week = function(items) {
 
   if (!items) {
     items = [];
-    items.push(new rosegrid.model.Day(rosegrid.Weekday.MONDAY));
-    items.push(new rosegrid.model.Day(rosegrid.Weekday.TUESDAY));
-    items.push(new rosegrid.model.Day(rosegrid.Weekday.WEDNESDAY));
-    items.push(new rosegrid.model.Day(rosegrid.Weekday.THURSDAY));
-    items.push(new rosegrid.model.Day(rosegrid.Weekday.FRIDAY));
+    items.push(new rosegrid.model.Day(rosegrid.model.Weekday.MONDAY));
+    items.push(new rosegrid.model.Day(rosegrid.model.Weekday.TUESDAY));
+    items.push(new rosegrid.model.Day(rosegrid.model.Weekday.WEDNESDAY));
+    items.push(new rosegrid.model.Day(rosegrid.model.Weekday.THURSDAY));
+    items.push(new rosegrid.model.Day(rosegrid.model.Weekday.FRIDAY));
   }
 
   if (items.length != 5) {
@@ -46,7 +40,7 @@ rosegrid.model.Week = function(items) {
   }
 
   /**
-   * @type {!Array.<rosegrid.model.Day>}
+   * @type {Array.<rosegrid.model.Day>}
    * @private
    */
   this.dayModels_ = goog.array.clone(items);
@@ -61,7 +55,7 @@ rosegrid.model.Week.prototype.getDayModels = function() {
 
 /** 
  * Returns the DayModel for a given weekday.
- * @param {rosegrid.Weekday} weekday
+ * @param {rosegrid.model.Weekday} weekday
  * @return {rosegrid.model.Day} 
  */
 rosegrid.model.Week.prototype.getDayModel = function(weekday) {
@@ -71,8 +65,8 @@ rosegrid.model.Week.prototype.getDayModel = function(weekday) {
 
 /** 
  * Returns the cell model for a given weekday and period.
- * @param {rosegrid.Weekday} weekday
- * @param {rosegrid.Period} period Zero based, index 0 = 1st Period
+ * @param {rosegrid.model.Weekday} weekday
+ * @param {rosegrid.model.Period} period Zero based, index 0 = 1st Period
  * @return {rosegrid.model.Cell} 
  */
 rosegrid.model.Week.prototype.getCellModel = function(weekday, period) {
@@ -82,19 +76,18 @@ rosegrid.model.Week.prototype.getCellModel = function(weekday, period) {
 
 /** 
  * Returns the cell model for a given index (Monday 1st hour = 0, Friday 10th hour = 49)
- * @param {number} index
+ * @param {number} numericIndex
  * @return {rosegrid.model.Cell} 
  */
-rosegrid.model.Week.prototype.getCellModelByIndex = function(index) {
-  var weekday = Math.floor(index / 10);
-  var period = index % 10;
-  return this.dayModels_[weekday].getCellModel(period);
+rosegrid.model.Week.prototype.getCellModelByNumericIndex = function(numericIndex) {
+  var cellIndex = rosegrid.model.CellIndex.convertNumericIndexToCellIndex(numericIndex);
+  return this.getCellModelByCellIndex(cellIndex);
 };
 
 
 /** 
  * Returns the cell model for a given cell index
- * @param {rosegrid.CellIndex} cellIndex
+ * @param {rosegrid.model.CellIndex} cellIndex
  * @return {rosegrid.model.Cell} 
  */
 rosegrid.model.Week.prototype.getCellModelByCellIndex = function(cellIndex) {
