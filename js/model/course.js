@@ -45,13 +45,13 @@ rosegrid.model.Course = function(weekModel, courseBackgroundColor, courseTextCol
    * Cell background color hexString.
    * @type {string}
    */
-  this.courseBackgroundColor = courseBackgroundColor || '#fff';
+  this.courseBackgroundColor = courseBackgroundColor || rosegrid.model.Cell.DEFAULT_BACKGROUND_COLOR;
 
   /**
    * Cell text color hexString.
    * @type {string}
    */
-  this.courseTextColor = courseTextColor || '#000';
+  this.courseTextColor = courseTextColor || rosegrid.model.Cell.DEFAULT_TEXT_COLOR;
   
   /**
    * List of the cell groups holding the course meeting times.
@@ -86,13 +86,14 @@ rosegrid.model.Course.prototype.clear = function() {
  * @param {rosegrid.model.Course} courseProperties Object with new properties for the model.Course.
  */
 rosegrid.model.Course.prototype.setProperties = function(courseProperties) {
+  this.weekModel_ = courseProperties.weekModel_;
   this.officialCourseNumber = courseProperties.officialCourseNumber;
   this.officialCourseSection = courseProperties.officialCourseSection;
   this.courseBackgroundColor = courseProperties.courseBackgroundColor;
   this.courseTextColor = courseProperties.courseTextColor;
   this.cellGroups_ = [];
   for (var i = 0; i < courseProperties.getCellGroups().length; i++) {
-    this.cellGroups_.push( courseProperties.getCellGroups()[i] ); 
+    this.cellGroups_.push( courseProperties.getCellGroups()[i].clone() ); 
   }
 };
 

@@ -1,7 +1,8 @@
+
 /**
  * @fileoverview Holds the data to represent the grid cells.
- * WeekModel is an array of 5 DayModel objects. 
- *   
+ * Week is an array of 5 Day objects, which have 10 Cell objects each.
+ *
  * @author fisherds@gmail.com (Dave Fisher)
  */
 
@@ -14,9 +15,10 @@ goog.require('rosegrid.model.Period');
 goog.require('rosegrid.model.Weekday');
 
 
+
 /**
- * Create a full week model of all the cell models.
- * @param {Array.<rosegrid.model.Day>=} items list of rosegrid.model.Day objects representing the days of the week.
+ * Creates a full week model of all the cell models.
+ * @param {Array.<rosegrid.model.Day>=} items array of Day objects.
  * @constructor
  */
 rosegrid.model.Week = function(items) {
@@ -47,48 +49,54 @@ rosegrid.model.Week = function(items) {
 };
 
 
-/** @return {!Array.<rosegrid.model.Day>} */
+/**
+ * Returns a shallow copy of the Day model objects.
+ * @return {Array.<rosegrid.model.Day>} Days in this week.
+ */
 rosegrid.model.Week.prototype.getDayModels = function() {
   return goog.array.clone(this.dayModels_);
 };
 
 
-/** 
- * Returns the DayModel for a given weekday.
- * @param {rosegrid.model.Weekday} weekday
- * @return {rosegrid.model.Day} 
+/**
+ * Returns the Day for a given weekday.
+ * @param {rosegrid.model.Weekday} weekday weekday to get.
+ * @return {rosegrid.model.Day} the Day for the passed Weekday.
  */
 rosegrid.model.Week.prototype.getDayModel = function(weekday) {
   return this.dayModels_[weekday];
 };
 
 
-/** 
+/**
  * Returns the cell model for a given weekday and period.
- * @param {rosegrid.model.Weekday} weekday
- * @param {rosegrid.model.Period} period Zero based, index 0 = 1st Period
- * @return {rosegrid.model.Cell} 
+ * @param {rosegrid.model.Weekday} weekday weekday to get.
+ * @param {rosegrid.model.Period} period Zero based, index 0 = 1st Period.
+ * @return {rosegrid.model.Cell} Cell located at the given weekday/period.
  */
 rosegrid.model.Week.prototype.getCellModel = function(weekday, period) {
   return this.dayModels_[weekday].getCellModel(period);
 };
 
 
-/** 
- * Returns the cell model for a given index (Monday 1st hour = 0, Friday 10th hour = 49)
- * @param {number} numericIndex
- * @return {rosegrid.model.Cell} 
+/**
+ * Returns the cell model for a given numeric index.  Monday 1st hour = 0,
+ * Friday 10th hour = 49.
+ * @param {number} numericIndex index value 0 to 49 for the Cell model.
+ * @return {rosegrid.model.Cell} Cell located at the passed numericIndex.
  */
-rosegrid.model.Week.prototype.getCellModelByNumericIndex = function(numericIndex) {
-  var cellIndex = rosegrid.model.CellIndex.convertNumericIndexToCellIndex(numericIndex);
+rosegrid.model.Week.prototype.getCellModelByNumericIndex =
+    function(numericIndex) {
+  var cellIndex =
+      rosegrid.model.CellIndex.convertNumericIndexToCellIndex(numericIndex);
   return this.getCellModelByCellIndex(cellIndex);
 };
 
 
-/** 
- * Returns the cell model for a given cell index
- * @param {rosegrid.model.CellIndex} cellIndex
- * @return {rosegrid.model.Cell} 
+/**
+ * Returns the cell model for a given cell index.
+ * @param {rosegrid.model.CellIndex} cellIndex the CellIndex to retrieve.
+ * @return {rosegrid.model.Cell} Cell located at the passed CellIndex.
  */
 rosegrid.model.Week.prototype.getCellModelByCellIndex = function(cellIndex) {
   return this.dayModels_[cellIndex.weekday].getCellModel(cellIndex.period);

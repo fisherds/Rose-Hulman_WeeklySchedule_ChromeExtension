@@ -36,6 +36,12 @@ function testEquals() {
   assertFalse( m4.equals(m5) );
 }
 
+function testClone() {
+  var m4_ = m4.clone();
+  assertTrue( m4.equals(m4_) );
+  assertFalse( m4 == m4_ );  // They are not the same object
+}
+
 function testConvertCellIndexToNumericIndex() {
   assertEquals( 3, rosegrid.model.CellIndex.convertCellIndexToNumericIndex(m4) );
   assertEquals( 4, rosegrid.model.CellIndex.convertCellIndexToNumericIndex(m5) );

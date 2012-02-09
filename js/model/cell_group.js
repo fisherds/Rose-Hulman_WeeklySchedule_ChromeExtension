@@ -76,6 +76,7 @@ rosegrid.model.CellGroup = function(weekModel, cellBackgroundColor, cellTextColo
   this.updateAllCellModels();
 };
 
+
 /**
  * Adds these CellIndex objects to the group and updates all cell models to current properties.
  * 
@@ -83,15 +84,15 @@ rosegrid.model.CellGroup = function(weekModel, cellBackgroundColor, cellTextColo
  */
 rosegrid.model.CellGroup.prototype.addCellModels = function(newCellIndices) {
   for (var i = 0; i < newCellIndices.length; i++) {
-    var itemIndex = this.findCellIndex(newCellIndices[i]);
-    if (itemIndex == -1) {
+    if (!this.contains(newCellIndices[i])) {
       this.cellIndices_.push(newCellIndices[i]);
     }
-    // The findCellIndex approach is not efficient, but effective.
-    // goog.array.insert would add items that were different objects even if they had equal properties.
+    // Using goog.array.insert would've added cell indices that were different objects even if they
+    // had equal properties.  So using the brute force contains checking seemed better.
   }
   this.updateAllCellModels(); // Could've just updated the new cells, but updating all cell models.
 };
+
 
 /**
  * Removes the CellIndex objects from the group and resets those cells.
@@ -113,6 +114,7 @@ rosegrid.model.CellGroup.prototype.removeCellModels = function(removeCellIndices
   }
 };
 
+
 /**
  * Updates the CellModel objects 
  */
@@ -123,6 +125,7 @@ rosegrid.model.CellGroup.prototype.updateAllCellModels = function() {
     cellModel.setProperties(this);
   }
 };
+
 
 /**
  * Returns the index of the cell index.  Uses the actual values of the cell index and
@@ -139,6 +142,7 @@ rosegrid.model.CellGroup.prototype.findCellIndex = function(cellIndex) {
   return -1;
 };
 
+
 /**
  * Determines if the cellIndex is contained in this cell group.
  * 
@@ -147,6 +151,15 @@ rosegrid.model.CellGroup.prototype.findCellIndex = function(cellIndex) {
  */
 rosegrid.model.CellGroup.prototype.contains = function(cellIndex) {
   return this.findCellIndex(cellIndex) != -1;
+};
+
+
+/**
+ * Creates a new CellGroup that has the same properties.
+ * 
+ * @return {rosegrid.model.CellGroup} the new CellGroup
+ */
+rosegrid.model.CellGroup.prototype.clone = function() {
 };
 
 
