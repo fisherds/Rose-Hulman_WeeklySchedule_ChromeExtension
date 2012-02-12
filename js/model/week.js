@@ -50,6 +50,16 @@ rosegrid.model.Week = function(items) {
 
 
 /**
+ * Resets all cell models to default values.
+ */
+rosegrid.model.Week.prototype.clear = function() {
+  for (var dayIndex = 0; dayIndex < this.dayModels_.length; dayIndex++) {
+    this.dayModels_[dayIndex].clear();
+  }
+};
+
+
+/**
  * Returns a shallow copy of the Day model objects.
  * @return {Array.<rosegrid.model.Day>} Days in this week.
  */

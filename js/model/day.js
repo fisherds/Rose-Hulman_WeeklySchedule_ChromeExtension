@@ -52,6 +52,16 @@ rosegrid.model.Day = function(weekday, items) {
 
 
 /**
+ * Resets all cell models to default values.
+ */
+rosegrid.model.Day.prototype.clear = function() {
+  for (var i = 0; i < this.cellModels_.length; i++) {
+    this.cellModels_[i].clear();
+  }
+};
+
+
+/**
  * Returns the name for this Day.
  * @return {rosegrid.model.Weekday} day name for this Day model.
  */
