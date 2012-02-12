@@ -1,0 +1,5 @@
+rosegrid.RoseClock.getInstance().setOffsetJsonp(
+{
+  'offset': 45  
+}
+)

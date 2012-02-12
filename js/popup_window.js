@@ -19,6 +19,8 @@ goog.require('rosegrid.ui.CourseEditor');
 goog.require('rosegrid.model.QuarterSchedule');
 
 
+goog.require('rosegrid.RoseClock');
+
 
 
 /**
@@ -83,7 +85,7 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	var buttons = goog.dom.getElementsByClass(baseButtonClass);
 	for (var i = 0; i < buttons.length; i++) {
 		var button = buttons[i];
-		var control = new rosegrid.ui.CellControl( this.weekModel.getCellModelByIndex(i) );
+		var control = new rosegrid.ui.CellControl( this.weekModel.getCellModelByNumericIndex(i) );
 		this.cellControls.push(control);
 		control.render(button);
 		goog.events.listen(control, goog.ui.Component.EventType.ACTION,
@@ -104,6 +106,9 @@ rosegrid.PopupWindow.prototype.init_ = function() {
   
 	this.logger.info('Total number of listeners = ' + goog.events.getTotalListenerCount());
 	// Originally 252 prior to adding a container
+	
+
+	rosegrid.RoseClock.getInstance().updateOffset();
 	
 	this.quarterSchedule.loadSavedCourses();
 };
