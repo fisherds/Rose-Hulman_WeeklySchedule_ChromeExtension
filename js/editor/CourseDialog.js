@@ -1,12 +1,11 @@
 
 /**
- * @fileOverview Wrapper around the course dialog box.
- * Coordinates the communication of the course dialog box  
+ * @fileOverview Wrapper around the course dialog box to edit a course.  
  *   
  * @author fisherds@gmail.com (Dave Fisher)
  */
 
-goog.provide('rosegrid.ui.CourseEditor');
+goog.provide('rosegrid.editor.CourseDialog');
 
 goog.require('goog.debug');
 goog.require('goog.debug.Console');
@@ -31,7 +30,7 @@ goog.require('rosegrid.model.Course');
  *
  * @constructor
  */
-rosegrid.ui.CourseEditor = function() {
+rosegrid.editor.CourseDialog = function() {
 
   /**
    * Dialog displayed when creating or editing a course.
@@ -63,13 +62,13 @@ rosegrid.ui.CourseEditor = function() {
  * Logger for this class.
  * @type {goog.debug.Logger}
  */
-rosegrid.ui.CourseEditor.prototype.logger =
-    goog.debug.Logger.getLogger('rosegrid.ui.CourseEditor');
+rosegrid.editor.CourseDialog.prototype.logger =
+    goog.debug.Logger.getLogger('rosegrid.editor.CourseDialog');
 
 /**
  * Initialize the Course Editor
  */
-rosegrid.ui.CourseEditor.prototype.init_ = function() {
+rosegrid.editor.CourseDialog.prototype.init_ = function() {
   this.courseDialog_.setHasTitleCloseButton(true);
   this.courseDialog_.setEscapeToCancel(true);
   this.courseDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.createOkCancel());
@@ -88,7 +87,7 @@ rosegrid.ui.CourseEditor.prototype.init_ = function() {
  * @param {boolean} isNewCourse true if this course is new,
  *     false if this course is existing and needs a delete button
  */
-rosegrid.ui.CourseEditor.prototype.launchEditorForCourse =
+rosegrid.editor.CourseDialog.prototype.launchEditorForCourse =
     function(course, isNewCourse) {
   this.tempCourseProperties_.setProperties(course);
   this.course_ = course;
@@ -117,7 +116,7 @@ rosegrid.ui.CourseEditor.prototype.launchEditorForCourse =
  * 
  * @param {goog.events.Event} e Event from the tab bar
  */
-rosegrid.ui.CourseEditor.prototype.handleTabSelection_ = function(e) {
+rosegrid.editor.CourseDialog.prototype.handleTabSelection_ = function(e) {
     var tabSelected = e.target;
     var contentElement = goog.dom.getElement('dialog-tabbar-content');
     while (contentElement.hasChildNodes()) {
@@ -143,7 +142,7 @@ rosegrid.ui.CourseEditor.prototype.handleTabSelection_ = function(e) {
  * Handle a button press from the Dialog. 
  * @param {goog.ui.Dialog.Event} e Event from the Dialog
  */
-rosegrid.ui.CourseEditor.prototype.handleDialogClose_ = function(e) {
+rosegrid.editor.CourseDialog.prototype.handleDialogClose_ = function(e) {
   var dialogEvent = /** type {goog.ui.Dialog.Event} */ (e);
   if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.OK) {
     this.logger.info('OK pressed');

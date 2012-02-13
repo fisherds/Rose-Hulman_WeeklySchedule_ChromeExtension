@@ -94,7 +94,7 @@ rosegrid.model.CellGroup.prototype.clear = function() {
   this.roomNumber = '';
   for (var i = 0; i < this.cellIndices_.length; i++) {
     var cellIndex = this.cellIndices_[i];
-    var cellModel = this.weekModel_.getCellModelByCellIndex(cellIndex);
+    var cellModel = this.weekModel_.getCellModelForCellIndex(cellIndex);
     cellModel.clear();
   }
   this.cellIndices_ = [];
@@ -128,7 +128,7 @@ rosegrid.model.CellGroup.prototype.removeCellIndices =
   for (var i = 0; i < cellIndices.length; i++) {
     var removeIndex = this.findCellIndex(cellIndices[i]);
     if (removeIndex > -1) {
-      this.weekModel_.getCellModelByCellIndex(cellIndices[i]).clear();
+      this.weekModel_.getCellModelForCellIndex(cellIndices[i]).clear();
       goog.array.removeAt(this.cellIndices_, removeIndex);
     }
   }
@@ -141,7 +141,7 @@ rosegrid.model.CellGroup.prototype.removeCellIndices =
 rosegrid.model.CellGroup.prototype.updateAllCellModels = function() {
   for (var i = 0; i < this.cellIndices_.length; i++) {
     var cellIndex = this.cellIndices_[i];
-    var cellModel = this.weekModel_.getCellModelByCellIndex(cellIndex);
+    var cellModel = this.weekModel_.getCellModelForCellIndex(cellIndex);
     cellModel.setProperties(this);
   }
 };

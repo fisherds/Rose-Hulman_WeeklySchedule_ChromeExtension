@@ -40,8 +40,15 @@ rosegrid.RoseClock.prototype.updateOffset = function() {
   goog.dom.appendChild( goog.dom.getElement('popup'), this.scriptEl);
 };
 
+
+/** @typedef {{offset: number}} */
+rosegrid.TimeOffset;
+
+
 /**
  * This is the function that the JSONP script will call.
+ * @param {rosegrid.TimeOffset} newOffset JSON object from the JSONP call, that
+ *    contains the Rose clock offset in seconds.
  */
 rosegrid.RoseClock.prototype.setOffsetJsonp = function (newOffset) {
   this.offsetSeconds = newOffset.offset;

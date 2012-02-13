@@ -7,44 +7,6 @@ body {
   margin: 2px;
 }
 
-.cell-control {
-  background-color: #fff;
-}
-
-.rg-cell {
-  font: normal 8pt Tahoma;
-  color: #000;
-  cursor: pointer;
-}
-
-.rg-cell-disabled {
-  border-color: #888;
-  color: #888;
-  background-color: #ccc;
-}
-
-.rg-cell-hover {
-  border-color: #369;
-  color: #369;
-  background-color: #9cf;
-}
-
-.rg-cell-active,
-.rg-cell-selected,
-.rg-cell-checked {
-  border-color: #9cf;
-  color: #9cf;
-  background-color: #369;
-}
-
-.rg-cell-focused {
-}
-
-h1 {
-  color: #c11;
-  text-align: center;
-}
-
 .period-row td {
   background-color: #B8C5D3;
 }
@@ -73,7 +35,10 @@ table {
 
 td {
   text-align: center;
+  padding: 0 5px;
 }
+
+
 
 td.top-left-cell {
   border: none;
@@ -93,4 +58,34 @@ td.top-left-cell {
 
 .room-number,
 .course-name {
+}
+
+
+
+.cell-control {
+  font: normal 8pt Tahoma;
+  cursor: pointer;
+}
+
+.cell-control-disabled {
+  border-color: #888;
+  color: #888;
+  background-color: #ccc;
+}
+
+.cell-control-hover {
+  border-color: #369;
+  color: #369;
+  background-color: #9cf;
+}
+
+.cell-control-active,
+.cell-control-selected,
+.cell-control-checked {
+  border-color: #9cf;
+  color: #9cf;
+  background-color: #369;
+}
+
+.cell-control-focused {
 }

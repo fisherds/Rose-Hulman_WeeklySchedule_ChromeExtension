@@ -36,8 +36,7 @@ rosegrid.PopupWindow = function() {
   this.quarterSchedule = rosegrid.model.QuarterSchedule.getInstance();
   
   /**
-   * Holds the model objects for the weekly schedule.
-   * Just a convenience 
+   * Holds the model objects for the weekly schedule. Convenience reference. 
    * @type {rosegrid.model.Week} 
    */ 
   this.weekModel = this.quarterSchedule.getWeekModel();
@@ -79,25 +78,29 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	var soyData = {days: daysOfTheWeek};
 	goog.soy.renderElement(goog.dom.getElement('popup'), rosegrid.templates.popup.body, soyData);
 
+//	var table = goog.dom.getElementsByTagNameAndClass('table')[0];
+//	var tableContainer = new rosegrid.ui.TableContainer(this.weekModel);
+//	tableContainer.decorate(table);
+	
 	// Render all of the cell controls
 	// TODO: Use a container to reduce the number of listeners.
-	var baseButtonClass = goog.getCssName('cell-control');
+	var baseButtonClass = goog.getCssName('rg-cell');
 	var buttons = goog.dom.getElementsByClass(baseButtonClass);
 	for (var i = 0; i < buttons.length; i++) {
 		var button = buttons[i];
-		var control = new rosegrid.ui.CellControl( this.weekModel.getCellModelByNumericIndex(i) );
+		var control = new rosegrid.ui.CellControl( this.weekModel.getCellModelForNumericIndex(i) );
 		this.cellControls.push(control);
 		control.render(button);
 		goog.events.listen(control, goog.ui.Component.EventType.ACTION,
 		    goog.bind(this.cellControlClickListener_, this));
 	}
 	
-	// Initialize the course info dialog.
-
+	// Initialize course table
+  this.quarterSchedule.loadSavedCourses();
   for (var i = 0; i < this.cellControls.length; i++) {
     this.cellControls[i].updateDisplay();
   }
-  
+	
   // Initialize the logger.
 	//Log levels: shout, severe, warning, info, config, fine, finer, finest
   goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
@@ -109,8 +112,6 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	
 
 	rosegrid.RoseClock.getInstance().updateOffset();
-	
-	this.quarterSchedule.loadSavedCourses();
 };
 
 
@@ -124,7 +125,14 @@ rosegrid.PopupWindow.prototype.cellControlClickListener_ = function(e) {
   }
   
   // Figure up the course that was clicked and pass it along
-  this.quarterSchedule.getCourseAtIndex();
-  
-  this.courseEditor.setVisible(true);
+  var cellControl = /** @type {rosegrid.ui.CellControl} */ (e.target);
+  var cellModel = cellControl.getModel();
+  var cellIndex = this.weekModel.getCellIndexForCellModel(cellModel);
+  var course = this.quarterSchedule.getCourseAtCellIndex(cellIndex);
+  var isNewCourse = false;
+  if (course == null) {
+    course = new rosegrid.model.Course(this.weekModel);
+    isNewCourse = true;
+  }
+  this.courseEditor.launchEditorForCourse(course, isNewCourse);
 };

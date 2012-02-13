@@ -138,25 +138,25 @@ function testLoadingACourse() {
       rosegrid.model.Period.FOURTH_HOUR).roomNumber);
 }
 
-function testGetCellModelByNumericIndex() {
+function testGetCellModelForNumericIndex() {
   // A bit a of misuse of the rosegrid.model.Weekday enum, but functional.
   for (var i = 0; i < 4; i++) {
     blankWeek.getCellModel(i, 3).courseName = 'ME430';
     blankWeek.getCellModel(i, 3).roomNumber = 'C111';
   }
-  assertEquals('ME430', blankWeek.getCellModelByNumericIndex(3).courseName);
-  assertEquals('ME430', blankWeek.getCellModelByNumericIndex(13).courseName);
-  assertEquals('ME430', blankWeek.getCellModelByNumericIndex(23).courseName);
-  assertEquals('ME430', blankWeek.getCellModelByNumericIndex(33).courseName);
-  assertEquals('', blankWeek.getCellModelByNumericIndex(43).courseName);
-  assertEquals('C111', blankWeek.getCellModelByNumericIndex(3).roomNumber);
-  assertEquals('C111', blankWeek.getCellModelByNumericIndex(13).roomNumber);
-  assertEquals('C111', blankWeek.getCellModelByNumericIndex(23).roomNumber);
-  assertEquals('C111', blankWeek.getCellModelByNumericIndex(33).roomNumber);
-  assertEquals('', blankWeek.getCellModelByNumericIndex(43).roomNumber);
+  assertEquals('ME430', blankWeek.getCellModelForNumericIndex(3).courseName);
+  assertEquals('ME430', blankWeek.getCellModelForNumericIndex(13).courseName);
+  assertEquals('ME430', blankWeek.getCellModelForNumericIndex(23).courseName);
+  assertEquals('ME430', blankWeek.getCellModelForNumericIndex(33).courseName);
+  assertEquals('', blankWeek.getCellModelForNumericIndex(43).courseName);
+  assertEquals('C111', blankWeek.getCellModelForNumericIndex(3).roomNumber);
+  assertEquals('C111', blankWeek.getCellModelForNumericIndex(13).roomNumber);
+  assertEquals('C111', blankWeek.getCellModelForNumericIndex(23).roomNumber);
+  assertEquals('C111', blankWeek.getCellModelForNumericIndex(33).roomNumber);
+  assertEquals('', blankWeek.getCellModelForNumericIndex(43).roomNumber);
 }
 
-function testGetCellModelByCellIndex() {
+function testGetCellModelForCellIndex() {
   // A bit a of misuse of the rosegrid.model.Weekday enum, but functional.
   for (var i = 0; i < 4; i++) {
     blankWeek.getCellModel(i, 3).courseName = 'ME430';
@@ -174,23 +174,31 @@ function testGetCellModelByCellIndex() {
       rosegrid.model.Weekday.FRIDAY, rosegrid.model.Period.FOURTH_HOUR);
 
   assertEquals('ME430',
-      blankWeek.getCellModelByCellIndex(monday4thHourCellIndex).courseName);
+      blankWeek.getCellModelForCellIndex(monday4thHourCellIndex).courseName);
   assertEquals('ME430',
-      blankWeek.getCellModelByCellIndex(tuesday4thHourCellIndex).courseName);
+      blankWeek.getCellModelForCellIndex(tuesday4thHourCellIndex).courseName);
   assertEquals('ME430',
-      blankWeek.getCellModelByCellIndex(wednesday4thHourCellIndex).courseName);
+      blankWeek.getCellModelForCellIndex(wednesday4thHourCellIndex).courseName);
   assertEquals('ME430',
-      blankWeek.getCellModelByCellIndex(thursday4thHourCellIndex).courseName);
+      blankWeek.getCellModelForCellIndex(thursday4thHourCellIndex).courseName);
   assertEquals('',
-      blankWeek.getCellModelByCellIndex(friday4thHourCellIndex).courseName);
+      blankWeek.getCellModelForCellIndex(friday4thHourCellIndex).courseName);
   assertEquals('C111',
-      blankWeek.getCellModelByCellIndex(monday4thHourCellIndex).roomNumber);
+      blankWeek.getCellModelForCellIndex(monday4thHourCellIndex).roomNumber);
   assertEquals('C111',
-      blankWeek.getCellModelByCellIndex(tuesday4thHourCellIndex).roomNumber);
+      blankWeek.getCellModelForCellIndex(tuesday4thHourCellIndex).roomNumber);
   assertEquals('C111',
-      blankWeek.getCellModelByCellIndex(wednesday4thHourCellIndex).roomNumber);
+      blankWeek.getCellModelForCellIndex(wednesday4thHourCellIndex).roomNumber);
   assertEquals('C111',
-      blankWeek.getCellModelByCellIndex(thursday4thHourCellIndex).roomNumber);
+      blankWeek.getCellModelForCellIndex(thursday4thHourCellIndex).roomNumber);
   assertEquals('',
-      blankWeek.getCellModelByCellIndex(friday4thHourCellIndex).roomNumber);
+      blankWeek.getCellModelForCellIndex(friday4thHourCellIndex).roomNumber);
+}
+
+function testGetCellIndexForCellModel() {
+  var m3CM = blankWeek.getCellModel(rosegrid.model.Weekday.MONDAY,
+      rosegrid.model.Period.THIRD_HOUR);
+  var m3 = new rosegrid.model.CellIndex(rosegrid.model.Weekday.MONDAY,
+      rosegrid.model.Period.THIRD_HOUR);
+  assertTrue(m3.equals(blankWeek.getCellIndexForCellModel(m3CM)));
 }

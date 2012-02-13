@@ -95,11 +95,11 @@ rosegrid.model.Week.prototype.getCellModel = function(weekday, period) {
  * @param {number} numericIndex index value 0 to 49 for the Cell model.
  * @return {rosegrid.model.Cell} Cell located at the passed numericIndex.
  */
-rosegrid.model.Week.prototype.getCellModelByNumericIndex =
+rosegrid.model.Week.prototype.getCellModelForNumericIndex =
     function(numericIndex) {
   var cellIndex =
       rosegrid.model.CellIndex.convertNumericIndexToCellIndex(numericIndex);
-  return this.getCellModelByCellIndex(cellIndex);
+  return this.getCellModelForCellIndex(cellIndex);
 };
 
 
@@ -108,6 +108,26 @@ rosegrid.model.Week.prototype.getCellModelByNumericIndex =
  * @param {rosegrid.model.CellIndex} cellIndex the CellIndex to retrieve.
  * @return {rosegrid.model.Cell} Cell located at the passed CellIndex.
  */
-rosegrid.model.Week.prototype.getCellModelByCellIndex = function(cellIndex) {
+rosegrid.model.Week.prototype.getCellModelForCellIndex = function(cellIndex) {
   return this.dayModels_[cellIndex.weekday].getCellModel(cellIndex.period);
 };
+
+
+/**
+ * Returns the cell index of the given cell model.
+ * @param {rosegrid.model.Cell} cellModel Cell model located at the passed CellIndex.
+ * @return {rosegrid.model.CellIndex} Cell index of the cell model.
+ */
+rosegrid.model.Week.prototype.getCellIndexForCellModel = function(cellModel) {
+  for (var weekday = 0; weekday < 5; weekday++) {
+    for (var period = 0; period < 10; period++) {
+      var cellIndex = rosegrid.model.CellIndex.convertNumericIndexToCellIndex(
+          weekday * 10 + period);
+      if (cellModel == this.getCellModelForCellIndex(cellIndex)) {
+        return cellIndex;
+      }
+    }  
+  }
+  return null;
+};
+

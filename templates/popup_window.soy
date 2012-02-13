@@ -11,21 +11,21 @@
  */
 {template .body}
   {call .topBar /}
-  {call .gridTable data="all" /}
+  {call .tableContainer data="all" /}
 {/template}
 
 /**
  * Container for everything above the table.
  */
 {template .topBar}
-  <img class={css logo} src="../images/logo_rhit.png" alt="Rose-Hulman Logo">
+  <img class="{css logo}" src="../images/logo_rhit.png" alt="Rose-Hulman Logo">
 {/template}
 
 /**
  * The complete weekly schedule table.
  * @param days A list of strings holding the days of the week.
  */
-{template .gridTable}
+{template .tableContainer}
 <table border="1" cellpadding="0" cellspacing="0">
   <tbody>
     {call .periodNumberRow /}
@@ -43,8 +43,8 @@
 * Adds the table row for the period numbers, 1 to 10.
 */
 {template .periodNumberRow}
-    <tr class={css period-row}{sp}{css period-number-row}>
-      <td class={css top-left-cell}></td>
+    <tr class="{css period-row}{sp}{css period-number-row}">
+      <td class="{css top-left-cell}"></td>
       {for $i in range(1, 11)}
         <td>{$i}</td>
       {/for}
@@ -55,8 +55,8 @@
 * Adds the period times row. 
 */
 {template .periodTimesRow}
-<tr class={css period-row}{sp}{css period-times-row}>
-  <td class={css top-left-cell}></td>
+<tr class="{css period-row}{sp}{css period-times-row}">
+  <td class="{css top-left-cell}"></td>
   <td>8:05-8:55</td>
   <td>9:00-9:50</td>
   <td>9:55-10:45</td>
@@ -76,9 +76,9 @@
  */
 {template .weekdayRow}
 <tr>
-  <td class={css day-label}>{$day}</td>
+  <td class="{css day-label}">{$day}</td>
   {for $i in range(1, 11)}
-    <td class={css cell-control}></td>
+    <td class="{css rg-cell}"></td>
   {/for}
 </tr>
 {/template}
@@ -89,14 +89,14 @@
  *   http://blog.themeforest.net/tutorials/vertical-centering-with-css/
  */
 {template .gridCell}
-<div class={css wrapper}>
-  <div class={css cell-inner}>
-    <div class={css course-name}></div>
+<div class="{css wrapper}">
+  <div class="{css cell-inner}">
+    <div class="{css course-name}"></div>
   </div>
 </div>
-<div class={css wrapper}>
-  <div class={css cell-inner}>
-    <div class={css room-number}></div>
+<div class="{css wrapper}">
+  <div class="{css cell-inner}">
+    <div class="{css room-number}"></div>
   </div>
 </div>
 {/template}
