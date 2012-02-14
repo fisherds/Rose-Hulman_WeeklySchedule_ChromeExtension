@@ -25,6 +25,7 @@ goog.require('rosegrid.ui.CellControl');
  */
 rosegrid.ui.TableContainer = function(weekModel, renderer) {
   goog.base(this, null /* content */, renderer);
+  this.setFocusable(false);
   this.setModel(weekModel);
 };
 goog.inherits(rosegrid.ui.TableContainer, goog.ui.Container);
@@ -61,18 +62,18 @@ rosegrid.ui.TableContainer.prototype.canDecorate = function() {
 
 
 /** @inheritDoc */
-rosegrid.ui.TableContainer.prototype.decorateInternal = function() {
-  goog.base(this, 'decorateInternal');
+rosegrid.ui.TableContainer.prototype.decorateInternal = function(element) {
+  goog.base(this, 'decorateInternal', element);
   
   // Create all the cell controls.
-  var cellControlClass = goog.getCssName('rg-cell');
+  var cellControlClass = goog.getCssName('cell-control');
   var cellControlTds = goog.dom.getElementsByClass(cellControlClass);
   for (var i = 0; i < cellControlTds.length; i++) {
     var cellControlTd = cellControlTds[i];
     var cellControl = new rosegrid.ui.CellControl(
         this.getModel().getCellModelForNumericIndex(i));
-    cellControl.render(cellControlTd);
     this.addChild(cellControl, false);
+    cellControl.decorate(cellControlTd);
   }
   
 };

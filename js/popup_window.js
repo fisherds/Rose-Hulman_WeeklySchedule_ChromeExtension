@@ -15,7 +15,11 @@ goog.require('goog.events');
 goog.require('goog.soy');
 goog.require('rosegrid.templates.popup');
 goog.require('rosegrid.ui.CellControl');
+goog.require('rosegrid.ui.TableContainer');
+
 goog.require('rosegrid.ui.CourseEditor');
+goog.require('rosegrid.editor.CourseDialog');
+
 goog.require('rosegrid.model.QuarterSchedule');
 
 
@@ -50,9 +54,12 @@ rosegrid.PopupWindow = function() {
 
   /**
    * Dialog box to allow course creation and editing.
-   * @type {rosegrid.ui.CourseEditor} 
+//   * @type {rosegrid.ui.CourseEditor} 
+   * @type {rosegrid.editor.CourseDialog}
    */ 
   this.courseEditor;
+  
+  
   
   // CONSIDER: Might want to create an event handler for listener cleanup.
     
@@ -78,28 +85,19 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	var soyData = {days: daysOfTheWeek};
 	goog.soy.renderElement(goog.dom.getElement('popup'), rosegrid.templates.popup.body, soyData);
 
-//	var table = goog.dom.getElementsByTagNameAndClass('table')[0];
-//	var tableContainer = new rosegrid.ui.TableContainer(this.weekModel);
-//	tableContainer.decorate(table);
-	
-	// Render all of the cell controls
-	// TODO: Use a container to reduce the number of listeners.
-	var baseButtonClass = goog.getCssName('rg-cell');
-	var buttons = goog.dom.getElementsByClass(baseButtonClass);
-	for (var i = 0; i < buttons.length; i++) {
-		var button = buttons[i];
-		var control = new rosegrid.ui.CellControl( this.weekModel.getCellModelForNumericIndex(i) );
-		this.cellControls.push(control);
-		control.render(button);
-		goog.events.listen(control, goog.ui.Component.EventType.ACTION,
-		    goog.bind(this.cellControlClickListener_, this));
-	}
-	
-	// Initialize course table
   this.quarterSchedule.loadSavedCourses();
-  for (var i = 0; i < this.cellControls.length; i++) {
-    this.cellControls[i].updateDisplay();
-  }
+
+	// The table values will be updated when they are constructed.
+  var table = goog.dom.getElementsByTagNameAndClass('table')[0];
+	window.console.log("table " + table);
+	var tableContainer = new rosegrid.ui.TableContainer(this.weekModel);
+	tableContainer.decorate(table);
+	
+	for (var i = 0; i < tableContainer.getChildCount(); i++) {
+	  goog.events.listen(tableContainer.getChildAt(i),
+	      goog.ui.Component.EventType.ACTION,
+	      goog.bind(this.cellControlClickListener_, this));	  
+	}
 	
   // Initialize the logger.
 	//Log levels: shout, severe, warning, info, config, fine, finer, finest
@@ -121,7 +119,9 @@ rosegrid.PopupWindow.prototype.init_ = function() {
  */
 rosegrid.PopupWindow.prototype.cellControlClickListener_ = function(e) {
   if (this.courseEditor == null) {
-    this.courseEditor = new rosegrid.ui.CourseEditor();  
+    this.logger.info("Made a new course editor");
+    //this.courseEditor = new rosegrid.ui.CourseEditor();
+    this.courseEditor = new rosegrid.editor.CourseDialog();
   }
   
   // Figure up the course that was clicked and pass it along
@@ -135,4 +135,8 @@ rosegrid.PopupWindow.prototype.cellControlClickListener_ = function(e) {
     isNewCourse = true;
   }
   this.courseEditor.launchEditorForCourse(course, isNewCourse);
+  
+  goog.events.listen(this.courseEditor.courseDialog_,
+      goog.ui.Dialog.EventType.SELECT,
+      goog.bind(this.handleDialogClose_, this));
 };

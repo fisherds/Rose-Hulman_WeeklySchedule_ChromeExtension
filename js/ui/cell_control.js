@@ -56,9 +56,15 @@ rosegrid.ui.CellControl.prototype.getModel;
 // *****************************************************************************
 /** @inheritDoc */
 rosegrid.ui.CellControl.prototype.createDom = function() {
-  goog.base(this, 'createDom');  // Creates the control's div element.
-  // Adds the remaining dom elements in the control into that div.
-  goog.soy.renderElement(this.getElement(), rosegrid.templates.popup.gridCell);
+  var cellControlDom = goog.soy.renderAsFragment(
+      rosegrid.templates.popup.cellControl);
+  this.setElementInternal(/** @type {Element} */ (cellControlDom)); 
+};
+
+
+/** @inheritDoc */
+rosegrid.ui.CellControl.prototype.decorateInternal = function(element) {
+  goog.base(this, 'decorateInternal', element);
 };
 
 
@@ -71,13 +77,13 @@ rosegrid.ui.CellControl.prototype.disposeInternal = function() {
 
 /** @inheritDoc */
 rosegrid.ui.CellControl.prototype.canDecorate = function() {
-  return false;  // There will be no calls to decorateInternal, render only.
+  return true;
 };
 
 
 /** @inheritDoc */
 rosegrid.ui.CellControl.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');  
+  goog.base(this, 'enterDocument');
   this.addIds_(this.getElement());
   this.updateDisplay();
 };
@@ -106,10 +112,10 @@ rosegrid.ui.CellControl.prototype.addIds_ = function(element) {
   var roomNumberDiv = goog.dom.getElementByClass('room-number', element);
   roomNumberDiv.id = this.makeId(
       rosegrid.ui.CellControl.IdFragment.ROOM_NUMBER);  
-  // Slight stretch of good programming practice to label the parent, oh well.
-  var parentCellTd = element.parentElement;
-  parentCellTd.id = this.makeId(
-      rosegrid.ui.CellControl.IdFragment.PARENT_TD);  
+//  // Slight stretch of good programming practice to label the parent, oh well.
+//  var parentCellTd = element.parentElement;
+//  parentCellTd.id = this.makeId(
+//      rosegrid.ui.CellControl.IdFragment.PARENT_TD);  
 };
 
 
@@ -123,10 +129,14 @@ rosegrid.ui.CellControl.prototype.updateDisplay = function() {
   var roomNumberDiv = this.getElementByFragment(
       rosegrid.ui.CellControl.IdFragment.ROOM_NUMBER);
   roomNumberDiv.innerHTML = this.getModel().getRoomNumber();  
-  var parentCellTd = this.getElementByFragment(
-      rosegrid.ui.CellControl.IdFragment.PARENT_TD); 
-  goog.style.setStyle(parentCellTd, 'background-color',
+//  var parentCellTd = this.getElementByFragment(
+//      rosegrid.ui.CellControl.IdFragment.PARENT_TD); 
+//  goog.style.setStyle(parentCellTd, 'background-color',
+//      this.getModel().getCellBackgroundColor());
+//  goog.style.setStyle(parentCellTd, 'color',
+//      this.getModel().getCellTextColor()); 
+  goog.style.setStyle(this.getElement(), 'background-color',
       this.getModel().getCellBackgroundColor());
-  goog.style.setStyle(parentCellTd, 'color',
+  goog.style.setStyle(this.getElement(), 'color',
       this.getModel().getCellTextColor());
 };

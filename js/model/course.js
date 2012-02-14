@@ -96,15 +96,25 @@ rosegrid.model.Course.prototype.clear = function() {
   this.cellGroups_ = [];
 };
 
+/**
+ * Creates a new course with the same properties as an existing course.
+ * @return {rosegrid.model.Course} New course with the same properties.
+ */
+rosegrid.model.Course.prototype.clone = function() {
+  var newCourse = new rosegrid.model.Course(this.weekModel_);
+  newCourse.setProperties(this);
+  return newCourse;
+};
+
 
 /**
- * Sets the properties of the model.Course using the courseProperties.
+ * Sets the properties of the model.Course using the courseProperties.  Does
+ * NOT set the week model.
  *
  * @param {rosegrid.model.Course} courseProperties Object with new properties
  *     for the model.Course.
  */
 rosegrid.model.Course.prototype.setProperties = function(courseProperties) {
-  this.weekModel_ = courseProperties.weekModel_;
   this.officialCourseNumber = courseProperties.officialCourseNumber;
   this.officialCourseSection = courseProperties.officialCourseSection;
   this.courseBackgroundColor = courseProperties.courseBackgroundColor;

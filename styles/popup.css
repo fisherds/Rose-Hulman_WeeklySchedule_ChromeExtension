@@ -36,13 +36,20 @@ table {
 td {
   text-align: center;
   padding: 0 5px;
+  border-width: 1px;
+  border-color: #777;
 }
 
 
 
 td.top-left-cell {
-  border: none;
   background-color: transparent;
+}
+.period-number-row td.top-left-cell {
+  border-width: 0 1px 0 0;
+}
+.period-times-row td.top-left-cell {
+  border-width: 0 1px 1px 0;
 }
 
 .wrapper {
@@ -74,17 +81,15 @@ td.top-left-cell {
 }
 
 .cell-control-hover {
-  border-color: #369;
-  color: #369;
-  background-color: #9cf;
+  border-color: #f22;
+  border-width: 1px;
 }
 
 .cell-control-active,
 .cell-control-selected,
 .cell-control-checked {
-  border-color: #9cf;
-  color: #9cf;
-  background-color: #369;
+  border-color: #ff0;
+  border-width: 1px;
 }
 
 .cell-control-focused {

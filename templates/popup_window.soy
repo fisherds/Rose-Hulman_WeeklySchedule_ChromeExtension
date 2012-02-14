@@ -78,7 +78,7 @@
 <tr>
   <td class="{css day-label}">{$day}</td>
   {for $i in range(1, 11)}
-    <td class="{css rg-cell}"></td>
+    {call .cellControl /}
   {/for}
 </tr>
 {/template}
@@ -88,15 +88,17 @@
  * Crazy wray9pper fix was something I found to do vertical-alignment.
  *   http://blog.themeforest.net/tutorials/vertical-centering-with-css/
  */
-{template .gridCell}
-<div class="{css wrapper}">
-  <div class="{css cell-inner}">
-    <div class="{css course-name}"></div>
+{template .cellControl}
+<td class="{css cell-control}">
+  <div class="{css wrapper}">
+    <div class="{css cell-inner}">
+      <div class="{css course-name}"></div>
+    </div>
   </div>
-</div>
-<div class="{css wrapper}">
-  <div class="{css cell-inner}">
-    <div class="{css room-number}"></div>
+  <div class="{css wrapper}">
+    <div class="{css cell-inner}">
+      <div class="{css room-number}"></div>
+    </div>
   </div>
-</div>
+</td>
 {/template}
