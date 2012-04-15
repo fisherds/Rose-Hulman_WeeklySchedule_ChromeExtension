@@ -1,6 +1,6 @@
 
 /**
- * @fileOverview Container that hold the Cell Controls in the table.  Primary
+ * @fileoverview Container that hold the Cell Controls in the table.  Primary
  * purpose is to maintain references to the 40 cell controls, so that they can
  * all be updated and to reduce the number of listeners.
  *   

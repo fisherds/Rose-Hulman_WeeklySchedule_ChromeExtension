@@ -96,6 +96,15 @@ rosegrid.model.Course.prototype.clear = function() {
   this.cellGroups_ = [];
 };
 
+
+/**
+ * Set the week model property.
+ * @param {rosegrid.model.Week} weekModel New week model or null.
+ */
+rosegrid.model.Course.prototype.setWeekModel = function(weekModel) {
+  this.weekModel_ = weekModel;
+};
+
 /**
  * Creates a new course with the same properties as an existing course.
  * @return {rosegrid.model.Course} New course with the same properties.

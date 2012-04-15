@@ -1,53 +1,43 @@
 
 /**
- * @fileOverview Wrapper around the course dialog box to edit a course.  
+ * @fileoverview Wrapper around the course dialog box to edit a course.  
  *   
  * @author fisherds@gmail.com (Dave Fisher)
  */
 
-goog.provide('rosegrid.editor.CourseDialog');
+goog.provide('rosegrid.editor.CourseDialogController');
+goog.provide('rosegrid.editor.CourseDialogController.EventType');
 
-
-goog.require('goog.debug.Console');
 goog.require('goog.debug.Logger');
-goog.require('goog.EventTarget');
-goog.require('goog.dom');
 goog.require('goog.events');
-goog.require('goog.soy');
-goog.require('goog.string');
-goog.require('goog.ui.Control');
+goog.require('goog.events.EventHandler');
+goog.require('goog.events.EventTarget');
 goog.require('goog.ui.Dialog');
-goog.require('goog.ui.Tab');
-goog.require('goog.ui.TabBar');
-goog.require('rosegrid.model.Week');
-goog.require('rosegrid.editor.CellIndicesTabController');
-goog.require('rosegrid.editor.DisplayTextTabController');
-goog.require('rosegrid.templates.courseDialog');
-goog.require('rosegrid.ui.CellControl');
+goog.require('rosegrid.editor.ContentTabBarController');
 goog.require('rosegrid.model.Course');
 
 
 
 /**
- * Creates the editor for this course.  
+ * Creates the editor for this course.  Displays the course editor dialog box
+ * with the data for the given course. If a user hits OK the course is modified
+ * and an event is fired.
  *
+ * @param {rosegrid.model.Course} course The course to edit.
+ * @param {boolean} isNewCourse True if this course is new,
+ *     false if this course is existing and needs a delete button.
  * @constructor
- * @extends {goog.EventTarget}
+ * @extends {goog.events.EventTarget}
  */
-rosegrid.editor.CourseDialog = function() {
-
-  /**
-   * Dialog displayed when creating or editing a course.
-   * @type {goog.ui.Dialog}
-   */
-  this.courseDialog_ = null;
+rosegrid.editor.CourseDialogController = function(course, isNewCourse) {
+  goog.base(this);
 
   /**
    * The course this editor will modify if a user selects OK after making
    * changes.
    * @type {rosegrid.model.Course}
    */
-  this.course_ = null;
+  this.course_ = course;
 
   /**
    * Holds the properties of the course during the editing process.
@@ -57,148 +47,94 @@ rosegrid.editor.CourseDialog = function() {
    * hits OK.
    * @type {rosegrid.model.Course}
    */
-  this.tempCourseProperties_ = null;
-
+  this.tempCourse_ = course.clone();
+  //this.tempCourse_.setWeekModel(null);
+    
   /**
-   * The tab bar that fills the dialog content.
+   * Dialog displayed when creating or editing a course.
+   * @type {goog.ui.Dialog}
+   */
+  this.courseDialog_ = new goog.ui.Dialog();
+  
+  /**
+   * The tab bar controller that will manage the dialog's content.
+   * Created after the dialog is rendered.
    * @type {goog.ui.TabBar}
    */
-  this.contentTabBar = null;
-  
-  /**
-   * The controller for the displayed tab.
-   * @type {goog.Disposable} 
-   */
-  this.tabDisplayed = null;
-  
+  this.contentTabBarController_ = new rosegrid.editor.ContentTabBarController(
+      this.tempCourse_, this.courseDialog_.getContentElement());
+
   /**
    * Holds events that should only be removed when the dialog is closed.
    * @type {goog.events.EventHandler}
    */
-  this.eventHandler = null;
+  this.eventHandler_ = new goog.events.EventHandler(this);
 };
-goog.inherits(rosegrid.editor.CourseDialog, goog.EventTarget);
+goog.inherits(rosegrid.editor.CourseDialogController, goog.events.EventTarget);
 
 
 /**
- * Logger for this class.
+ * Logger for this class. 
  * @type {goog.debug.Logger}
  */
-rosegrid.editor.CourseDialog.prototype.logger =
-    goog.debug.Logger.getLogger('rosegrid.editor.CourseDialog');
+rosegrid.editor.CourseDialogController.prototype.logger =
+    goog.debug.Logger.getLogger('rosegrid.editor.CourseDialogController');
 
 
 /**
- * Displays the course editor dialog box with the data for the given course. If
- * a user hits OK the course is modified and an event is fired.
- * 
- * @param {rosegrid.model.Course} course The course to edit
- * @param {boolean} isNewCourse True if this course is new,
- *     false if this course is existing and needs a delete button
+ * Event types that might be dispatched. 
+ * @enum {string} 
  */
-rosegrid.editor.CourseDialog.prototype.launchEditorForCourse =
-    function(course, isNewCourse) {
+rosegrid.editor.CourseDialogController.EventType = {
+  COURSE_DIALOG_CLOSED: goog.events.getUniqueId('course_dialog_closed')
+};
 
-  // Initialize the member variables
-  this.eventHandler = new goog.events.EventHandler();
-  this.course_ = course;
-  this.tempCourseProperties_ = course.clone();
 
-  // Setup the dialog (most complex part).
-  this.courseDialog_ = new goog.ui.Dialog();
+/**
+ * Initialize the course dialog and display the dialog.
+ * @param {boolean} isNewCourse True if this is a new course being added.
+ *     False if this dialog is editing an existing course.
+ * @private
+ */
+rosegrid.editor.CourseDialogController.prototype.init_ = function(isNewCourse) {
+  // Setup the dialog.
   this.courseDialog_.setHasTitleCloseButton(true);
   this.courseDialog_.setEscapeToCancel(true);
   this.courseDialog_.setButtonSet(goog.ui.Dialog.ButtonSet.createOkCancel());
-  this.eventHandler.listen(this.courseDialog_,
-      goog.ui.Dialog.EventType.SELECT,
-      goog.bind(this.handleDialogClose_, this));
+  this.eventHandler_.listen(this.courseDialog_, goog.ui.Dialog.EventType.SELECT,
+      this.handleDialogClose_);
 
   if (isNewCourse) {
     this.courseDialog_.setTitle('Add new course');
   } else {
-    this.courseDialog_.setTitle('Edit ' + course.officialCourseNumber);
+    this.courseDialog_.setTitle('Editing ' +
+        this.tempCourse_.officialCourseNumber);
   }
-  
-  var data = {course: this.course_};
-  this.courseDialog_.setContent(
-      rosegrid.templates.courseDialog.dialogTabBar(data));
-  
-  this.courseDialog_.render();
-  
-  // Now that the data is part of the DOM attach a TabBar container.
-  this.contentTabBar = new goog.ui.TabBar();
-  this.contentTabBar.decorate(goog.dom.getElement('dialog-tabbar'));
-  
-  // Listen for tab selections.
-  this.eventHandler.listen(this.contentTabBar,
-      goog.ui.Component.EventType.SELECT,
-      goog.bind(this.handleTabSelection_, this));
-    
-  // Display the dialog.
   this.courseDialog_.setVisible(true);
+  this.contentTabBarController_.onVisible();
 };
 
 
 /**
- * 
- * @param {goog.events.Event} e Event from the tab bar
- */
-rosegrid.editor.CourseDialog.prototype.handleTabSelection_ = function(e) {
-    var tabSelected = e.target;
-    var contentElement = goog.dom.getElement('dialog-tabbar-content');
-    while (contentElement.hasChildNodes()) {
-      contentElement.removeChild(contentElement.lastChild);
-    }
-    if (tabSelected.getCaption() == 'Course') {
-      this.tabDisplayed = new rosegrid.editor.DisplayTextTabController(contentElement, this.tempCourseProperties_);
-//      goog.soy.renderElement(contentElement,
-//          rosegrid.templates.courseDialog.courseTab, this.tempCourseProperties_);
-      return;
-    }
-    for (var i = 0; i < this.course_.cellGroups_.length; i++) {
-      if (goog.string.caseInsensitiveEndsWith(tabSelected.getElement().id,
-          "" + i)) {
-        this.tabDisplayed = new rosegrid.editor.CellIndexTabController(contentElement, this.tempCourseProperties_.cellGroups_[i]);
-//        goog.soy.renderElement(contentElement,
-//            rosegrid.templates.courseDialog.cellGroupScheduleTab,
-//            this.course_.cellGroups_[i]);
-        return;
-      }
-    }
-    goog.dom.setTextContent(contentElement, 'You selected the "' + tabSelected.getCaption() + '" tab.');
-    this.logger.info('handleTabSelection_ Total number of listeners = ' + goog.events.getTotalListenerCount());
-};
-
-
-
-
-/**
- * Handle a button press from the Dialog. 
+ * Handles a button press from the Dialog. 
  * @param {goog.ui.Dialog.Event} e Event from the Dialog
  */
-rosegrid.editor.CourseDialog.prototype.handleDialogClose_ = function(e) {
-  this.logger.info('handleDialogClose_ Total number of listeners = ' + goog.events.getTotalListenerCount());
+rosegrid.editor.CourseDialogController.prototype.handleDialogClose_ = function(e) {
   var dialogEvent = /** type {goog.ui.Dialog.Event} */ (e);
   if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.OK) {
     this.logger.info('OK pressed');
+    this.course_.setProperties(this.tempCourse_);
   } else if (dialogEvent.key == goog.ui.Dialog.DefaultButtonKeys.CANCEL) {
     this.logger.info('Cancel pressed');
   } else {
-    this.logger.info('Unknown button');
+    this.logger.info('Unknown button pressed');
   }
 
-  this.courseEditor.courseDialog_.setVisible(false);  
-  // TODO: Do any necessary cleanup.
-  // The dialog content should be completely removed
-  // - Remove all listeners
-  // - Dispose of all controls
-  // - Remove all DOM elements within the Dialog content
-  // Dialog title reset to an empty string
-  // Button set can remain but delete button and listener is removed if present
+  //this.courseEditor.courseDialog_.setVisible(false);
   
-  this.courseEditor.dispose();
-  this.courseEditor = null;
-  this.logger.info('handleDialogClose_ Total number of listeners = ' + goog.events.getTotalListenerCount());
+  // Fire an event
+  this.dispatchEvent(
+      rosegrid.editor.CourseDialogController.EventType.COURSE_DIALOG_CLOSED);
 };
 
 
@@ -206,18 +142,15 @@ rosegrid.editor.CourseDialog.prototype.handleDialogClose_ = function(e) {
 // goog.Disposable
 // *****************************************************************************
 /** @inheritDoc */
-rosegrid.editor.CourseDialog.prototype.disposeInternal = function() {
-  this.eventHandler.removeAll();
-  this.eventHandler.dispose();
-  this.contentTabBar.dispose();
-  this.courseDialog_.dispose();
-  this.tabDisplayed.dispose();
+rosegrid.editor.CourseDialogController.prototype.disposeInternal = function() {
+  this.eventHandler_.removeAll();
+  goog.dispose(this.eventHandler_);
+  goog.dispose(this.contentTabBarController_);
+  goog.dispose(this.courseDialog_);
   
-  this.eventHandler = null;
-  this.contentTabBar = null;
+  this.eventHandler_ = null;
+  this.contentTabBarController_ = null;
   this.courseDialog_ = null;
   this.course_ = null;
-  this.tempCourseProperties_ = null;
-  this.tabDisplayed = null;
-  this.logger.info('Total number of listeners = ' + goog.events.getTotalListenerCount());
+  this.tempCourse_ = null;
 };

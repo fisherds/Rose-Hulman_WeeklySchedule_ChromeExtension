@@ -1,6 +1,6 @@
 
 /**
- * @fileOverview Control subclass that serves as an individual cell in the grid.
+ * @fileoverview Control subclass that serves as an individual cell in the grid.
  * Very simple goog.ui.Control subclass that can be clicked and updated.
  *   
  * @author fisherds@gmail.com (Dave Fisher)

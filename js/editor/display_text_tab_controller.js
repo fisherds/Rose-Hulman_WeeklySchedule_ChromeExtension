@@ -1,6 +1,6 @@
 
 /**
- * @fileOverview Controller for the tab that allows a user to change the labels
+ * @fileoverview Controller for the tab that allows a user to change the labels
  * of the cell groups, official course number, and course color.
  *   
  * @author fisherds@gmail.com (Dave Fisher)
@@ -20,6 +20,7 @@ goog.require('rosegrid.model.Course');
  * @extends {goog.Disposable}
  */
 rosegrid.editor.DisplayTextTabController = function() {
+  goog.base(this);
 
   
   /**

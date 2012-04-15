@@ -1,6 +1,6 @@
 
 /**
- * @fileOverview Wrapper around the course dialog box.
+ * @fileoverview Wrapper around the course dialog box.
  * Coordinates the communication of the course dialog box  
  *   
  * @author fisherds@gmail.com (Dave Fisher)
@@ -24,6 +24,10 @@ goog.require('rosegrid.templates.courseDialog');
 goog.require('rosegrid.ui.CellControl');
 goog.require('rosegrid.model.Course');
 
+
+//*********************
+//  TODO: Delete this file and move to the editor namespace solution
+//*********************
 
 
 /**

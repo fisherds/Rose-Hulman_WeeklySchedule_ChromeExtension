@@ -2,21 +2,22 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-  <title>Popup</title>
+  <title>Rose grid uncompiled</title>
   <link rel="stylesheet" type="text/css" href="../styles/tab.css">
   <link rel="stylesheet" type="text/css" href="../styles/tabbar.css">
   <link rel="stylesheet" type="text/css" href="../styles/common.css">
   <link rel="stylesheet" type="text/css" href="../styles/popup.css">
-  <link rel="stylesheet" type="text/css" href="../styles/dialog.css">
+  <link rel="stylesheet" type="text/css" href="../styles/course_dialog.css">
   <script src="../../../closure-library/closure/goog/base.js"></script>
   <script src="../build/deps.js"></script>
   <script>
-	goog.require('rosegrid.PopupWindow');
+	goog.require('rosegrid.PopupController');
   </script>
 </head>
-<body id="popup">
+<body id="rosegrid-popup">
   <script>
-	new rosegrid.PopupWindow();
+  var bodyEl = /** @type {!Element} */ (document.body);
+	new rosegrid.PopupController(bodyEl);
   </script>
 </body>
 </html>

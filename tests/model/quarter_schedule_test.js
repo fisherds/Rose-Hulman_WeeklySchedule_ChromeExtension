@@ -51,40 +51,40 @@ function testAddCourse_noConflict() {
   assertEquals(2, schedule.getCourses().length);
 
   assertEquals('#ee0',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellTextColor());
   assertEquals('Physics I Class',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCourseName());
   assertEquals('O267',
-      schedule.weekModel.getCellModelByCellIndex(m3).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m3).getRoomNumber());
 
   assertEquals('#ee0',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('Physics I Lab',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('CL102',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 
   assertEquals('#28f',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellTextColor());
   assertEquals('Calc I',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCourseName());
   assertEquals('O315',
-      schedule.weekModel.getCellModelByCellIndex(r4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(r4).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m10).getRoomNumber());
 }
 
 
@@ -92,13 +92,13 @@ function testAddCourse_conflict() {
   addTestCourses();
 
   assertEquals('#28f',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellTextColor());
   assertEquals('Calc I',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCourseName());
   assertEquals('O315',
-      schedule.weekModel.getCellModelByCellIndex(r4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(r4).getRoomNumber());
 
   var deCourse = new rosegrid.model.Course(schedule.weekModel,
       '#abc', '#123', 'MA201', 1);
@@ -108,13 +108,13 @@ function testAddCourse_conflict() {
   assertSameElements([m4, t4, w4, f4], calcGroup.getCellIndices());
 
   assertEquals('#abc',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellBackgroundColor());
   assertEquals('#123',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellTextColor());
   assertEquals('DE 1',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCourseName());
   assertEquals('O333',
-      schedule.weekModel.getCellModelByCellIndex(r4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(r4).getRoomNumber());
 }
 
 
@@ -136,62 +136,62 @@ function testClear() {
   assertEquals(0, schedule.getCourses().length);
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m3).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m3).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(r4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(r4).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m10).getRoomNumber());
 }
 
 
 function testRemoveCellIndices_() {
   addTestCourses();
   assertEquals('#28f',
-      schedule.weekModel.getCellModelByCellIndex(m4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m4).getCellTextColor());
   assertEquals('Calc I',
-      schedule.weekModel.getCellModelByCellIndex(m4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m4).getCourseName());
   assertEquals('O315',
-      schedule.weekModel.getCellModelByCellIndex(m4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m4).getRoomNumber());
 
   assertEquals('#ee0',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('Physics I Lab',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('CL102',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 
   schedule.removeCellIndices_([m4, w9]);
 
@@ -199,21 +199,21 @@ function testRemoveCellIndices_() {
   assertSameElements([t4, w4, r4, f4], calcGroup.getCellIndices());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m4).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m4).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m4).getRoomNumber());
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 }
 
 
@@ -223,22 +223,22 @@ function testRemoveCourse() {
   assertSameElements([calcCourse], schedule.getCourses());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m3).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m3).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 }
 
 
@@ -247,78 +247,78 @@ function testUpdateAllCellModels() {
   schedule.weekModel.clear();
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m3).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m3).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(r4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(r4).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m10).getRoomNumber());
 
   schedule.updateAllCellModels();
 
   assertEquals('#ee0',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCellTextColor());
   assertEquals('Physics I Class',
-      schedule.weekModel.getCellModelByCellIndex(m3).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m3).getCourseName());
   assertEquals('O267',
-      schedule.weekModel.getCellModelByCellIndex(m3).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m3).getRoomNumber());
 
   assertEquals('#ee0',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCellTextColor());
   assertEquals('Physics I Lab',
-      schedule.weekModel.getCellModelByCellIndex(w9).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(w9).getCourseName());
   assertEquals('CL102',
-      schedule.weekModel.getCellModelByCellIndex(w9).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(w9).getRoomNumber());
 
   assertEquals('#28f',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCellTextColor());
   assertEquals('Calc I',
-      schedule.weekModel.getCellModelByCellIndex(r4).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(r4).getCourseName());
   assertEquals('O315',
-      schedule.weekModel.getCellModelByCellIndex(r4).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(r4).getRoomNumber());
 
   assertEquals('#fff',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellBackgroundColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellBackgroundColor());
   assertEquals('#000',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCellTextColor());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCellTextColor());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getCourseName());
+      schedule.weekModel.getCellModelForCellIndex(m10).getCourseName());
   assertEquals('',
-      schedule.weekModel.getCellModelByCellIndex(m10).getRoomNumber());
+      schedule.weekModel.getCellModelForCellIndex(m10).getRoomNumber());
 }
 
 

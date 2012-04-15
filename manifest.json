@@ -4,13 +4,11 @@
   "description": "Display your weekly class schedule",
   "author": "Dave Fisher",
   "icons": {
-    "16": "images/icon16.png",
-    "48": "images/icon48.png",
-    "128": "images/icon128.png"
+    "128": "images/icon_128.png"
    },
   "browser_action": {
-    "default_icon": "images/icon16.png",
+    "default_icon": "images/RoseLogo.png",
     "default_title": "Weekly schedule",
-    "default_popup": "html/popup.html"
+    "default_popup": "popup.html"
   }
 }

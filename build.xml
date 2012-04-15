@@ -1,206 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
- 
 <project name="Rose-Hulman Grid Extension" default="build">
+	
+<!-- Defining folder locations and other properties. -->
+  <property name="closure.dir" value="${basedir}/../../../closure" />
+  <!-- Required folder structure within the closure folder:
+      closure/closure-compiler  (svn checkout of http://closure-compiler.googlecode.com/svn/trunk/)
+      closure/closure-library   (svn checkout of http://closure-library.googlecode.com/svn/trunk/)
+      closure/closure-templates (svn checkout of http://closure-templates.googlecode.com/svn/trunk/) -->
 
-<!-- Defining variables for file locations -->
+  <!-- Path to this build file from base.js (used by depswriter.py) -->
+  <property name="fromBase.dir"
+    value="../../../workspace2012/Rose-Hulman_WeeklySchedule_ChromeExtension" />
 	
-    <!-- Compiler Directory -->
-    <property name="closure-compiler.dir" value="${basedir}/../../closure-compiler" />
+	<!-- Set to false for optimized production compiling.
+	     Set to true for un-optimized whitespace only compiling for debugging work. -->
+	<property name="debug" value="false" />
 	
-    <!-- The compiler jar file -->
-    <property name="closure-compiler.jar" value="${closure-compiler.dir}/build/compiler.jar" />
-	
-    <!-- Library Directory -->
-    <property name="closure-library.dir" value="${basedir}/../../closure-library" />
+<!-- Targets -->
+  <target name="clean"
+  	  description="Deletes the contents of the build directory">
+    <delete dir="${build.dir}" />
+  </target>
 
-    <!-- Templates Directory -->
-    <property name="closure-templates.dir" value="${basedir}/../../closure-templates" />
+  <target name="templates"
+  	  description="Generate JavaScript files from the template soy files">
+    <generate-template>
+      <inputfilenames>
+      	<!-- Note, these files must be in a folder called templates. -->
+        <arg value="popup.soy" />
+        <arg value="course_dialog.soy" />
+      </inputfilenames>
+    </generate-template>
+  </target>
 
-    <!-- Output Build Directory -->
-    <property name="build.dir" value="${basedir}/build" />
-	
-	<!-- Path to this project from base.js (used by depswriter.py) -->
-	<property name="fromBase.dir"
-		value="../../../workspace2012/Rose-Hulman_WeeklySchedule_ChromeExtension" />
-	
-    <!-- output wrapper function -->
-	<!-- Optional helper function used by the compiler target to allow spaces in the output file -->
-    <property name="outputwrapper" value="(function(){%output%})();" />
-	
-    <!-- Compile this file first plus anything it requires -->
-	<!-- Used as an option to calcdeps, which is not required by closer-builder -->
-    <property name="inputFileToCompile" value="${basedir}/js/entry.js" />
+  <target name="gen_js_deps"
+  	  description="Generate the deps.js file for testing and uncompiled development">
+    <depswriter
+      pathFromCurrentDir = 'js'
+      pathFromLibraryBase = '${fromBase.dir}/js'
+      outputFile='${build.dir}/deps.js'>
+    </depswriter>
+  </target>
 
-<!-- Reuseable commands -->
+  <target name="replicate"
+  	  description="Copy non-js files into the build folder as necessary">
+    <copy todir="${build.dir}/files">
+      <fileset dir=".">
+        <include name="manifest.json" />
+        <include name="popup.html" />
+        <include name="images/**" />
+        <include name="styles/**" />
+      </fileset>
+    </copy>
+  </target>
 
-	<!-- SoyToJsSrcCompiler command to generate .soy.js functions for Soy files -->
+  <target name="rosegrid-compile" description="generates rosegrid.js">
+    <closure-builder
+      root='${basedir}/js/'
+      outputfile="${build.dir}/files/rosegrid.js"
+      compilationlevel="${closure.optimizations}" > <!-- Selects value based on debug property -->
+      <namespaces>
+        <arg line='--namespace=rosegrid.Main' />
+      </namespaces>
+      <extraflags>
+      	<!-- Optional.  This turns what would be warnings into errors for type safety. -->
+        <arg line='--compiler_flags="--jscomp_error=checkTypes"' />
+      </extraflags>
+    </closure-builder>
+  </target>
+  
+  <target name="build" depends="clean, templates, gen_js_deps, replicate, rosegrid-compile" />
+	
+
+	
+	
+	
+<!-- Ideally you should not need to edit anything beyong this point. -->
+	<!-- Locations for the closure components based on the closure folder. -->
+  <property name="compiler.jar" value="${closure.dir}/closure-compiler/build/compiler.jar" />
+  <property name="closure-library.dir" value="${closure.dir}/closure-library" />
+  <property name="closure-templates.dir" value="${closure.dir}/closure-templates" />
+
+  <!-- Output Build Directory -->
+  <property name="build.dir" value="${basedir}/build" />
+
+	<!-- Conditional properties that are set based on the value of the debug property. -->
+  <condition property="closure.optimizations" value="WHITESPACE_ONLY" else="ADVANCED_OPTIMIZATIONS">
+  	<equals arg1="${debug}" arg2="true" casesensitive="false"/>
+  </condition>
+  <condition property="pretty_print_formatting_arg" value='--compiler_flags="--formatting=PRETTY_PRINT"' else="">
+  	<equals arg1="${debug}" arg2="true" casesensitive="false"/>
+  </condition>
+  <condition property="print_input_delimiter_formatting_arg" value='--compiler_flags="--formatting=PRINT_INPUT_DELIMITER"' else="">
+    <equals arg1="${debug}" arg2="true" casesensitive="false"/>
+  </condition>
+
+	<!-- SoyToJsSrcCompiler command to generate JavaScript code from Soy files -->
 	<macrodef name="generate-template">
-		<attribute name="inputfile" />
-		<attribute name="outputPathFormat" />
+    <element name="inputfilenames" optional="no"/>
 		<sequential>
 			<java jar="${closure-templates.dir}/build/SoyToJsSrcCompiler.jar"
-				fork="true" failonerror="true" logError="true">
-				<arg line='--outputPathFormat "@{outputPathFormat}"' />
+				  fork="true" failonerror="true" logError="true">
+				<arg line='--inputPrefix templates/' /> <!-- Note required folder name -->
+				<inputfilenames />
+				<arg line='--outputPathFormat ${build.dir}/templates/{INPUT_FILE_NAME_NO_EXT}.js' />
 				<arg line="--shouldGenerateJsdoc" />
-				<arg line="--shouldProvideRequireSoyNamespaces" />
-				<arg line='"@{inputfile}"' />
+        <arg line="--shouldProvideRequireSoyNamespaces" />
+        <arg line="--cssHandlingScheme GOOG" />
 			</java>
 		</sequential>
 	</macrodef>
-		
-	<!-- closurebuilder.py to compile the JavaScript (replaces calcdeps) -->
-	<!-- Does not work yet -->
+
+  <!-- Used to generate a deps file for testing and uncompiled development -->
+  <macrodef name="depswriter">
+    <attribute name="pathFromCurrentDir" />
+    <attribute name="pathFromLibraryBase" />
+    <attribute name="outputfile" />
+    <element name="extraflags" optional="yes"/>
+    <sequential>
+      <exec executable="python" failonerror="true" logError="true">
+        <arg value="${closure-library.dir}/closure/bin/build/depswriter.py" />
+        <arg line='--root_with_prefix="${closure-templates.dir}/javascript ../../../closure-templates/javascript"' />
+        <arg line='--root_with_prefix="${build.dir}/templates ${fromBase.dir}/build/templates"' />
+        <arg line='--root_with_prefix="@{pathFromCurrentDir} @{pathFromLibraryBase}"' />
+        <arg line='--output_file="@{outputfile}"' />
+        <extraflags />
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <!-- Options for the compilationlevels:
+    WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS, ADVANCED_OPTIMIZATIONS" -->
+
+  <!-- extraflags you might want to add (replace XX with two hypens) -->
+    <!-- <arg line='XXcompiler_flags="XXjscomp_error=checkTypes"' /> -->
+    <!-- <arg line='XXroot=folder/with/other/js/files' /> -->
+    <!-- <arg line='XXnamespace=yournamespace.yourmodule' /> -->
+    <!-- <arg line='XXcompiler_flags="XXformatting=PRETTY_PRINT"' /> -->
+    <!-- <arg line='XXcompiler_flags="XXformatting=PRINT_INPUT_DELIMITER"' /> -->
+    <!-- <arg line='XXcompiler_flags="XXdebug=true"' /> -->
+    <!-- <arg line='XXcompiler_flags="XXgenerate_exports=true"' /> -->
+    <!-- <arg line='XXcompiler_flags="XXexterns=someFileWithExterns.js"' /> -->
+
+	<!-- Used to compile the JavaScript into a single "compiled" file. -->
 	<macrodef name="closure-builder">
-		<attribute name="inputfile" />
-		<attribute name="outputfile" />
-		<attribute name="compilerjarfile" default="${closure-compiler.jar}" />
-		<attribute name="compilationlevel" default="SIMPLE_OPTIMIZATIONS" />
-		<attribute name="outputmode" default="compiled" />
-		<element name="extraflags" optional="yes"/>
-		<element name="extrapaths" optional="yes"/>
-		<sequential>
-			<exec executable="python" failonerror="true" logError="true">
-				<arg value="${closure-library.dir}/closure/bin/build/closurebuilder.py" />
-				<arg line='-i "@{inputfile}"' />
-				<arg line='--output_file="@{outputfile}"' />
-				<arg line='--root="${closure-library.dir}"' />
-				<arg line='--root="${closure-templates.dir}"' />
-				<arg line='-i "${closure-templates.dir}/javascript/soyutils_usegoog.js"' />
-				<arg line='--namespace="rosegrid.PopupWindow"' />
-				<extrapaths />
-				<arg line="-o @{outputmode}" />
-				<arg line='-c "@{compilerjarfile}"' />
-				<arg line='-f "--compilation_level=@{compilationlevel}"' />
-				<extraflags />
-			</exec>
-		</sequential>
-	</macrodef>
+    <attribute name="root" />
+		<element name="namespaces" optional="no"/>
+    <attribute name="outputfile" />
+    <attribute name="compilationlevel" default="ADVANCED_OPTIMIZATIONS" />
+    <element name="extraflags" optional="yes"/>
+    <sequential>
+      <exec executable="python" failonerror="true" logError="true">
+        <arg value="${closure-library.dir}/closure/bin/build/closurebuilder.py" />
+        <arg line='--root="${closure-library.dir}"' />
+        <arg line='--root="${closure-templates.dir}"' />
+        <arg line='--root="@{root}"' />
+        <arg line='--root="${build.dir}/templates"' />
+        <namespaces />
+        <arg line='--output_mode=compiled' />
+        <arg line='--compiler_jar=${compiler.jar}' />
+        <arg line='--output_file=@{outputfile}' />
+        <arg line='--compiler_flags="--compilation_level=@{compilationlevel}"' />
+        <arg line='--compiler_flags="--js=${closure-library.dir}/closure/goog/deps.js"' />
+        <arg line='--compiler_flags="--warning_level=VERBOSE"' />
+        <arg line="${pretty_print_formatting_arg}" />
+        <arg line="${print_input_delimiter_formatting_arg}" />
+        <extraflags />
+      </exec>
+    </sequential>
+  </macrodef>
 
-	<!-- Using calcdeps to compile the JavaScript (could also be used to generate a deps file) -->
-	<macrodef name="closure-compile">
-		<attribute name="inputfile" />
-		<attribute name="outputfile" />
-		<attribute name="compilerjarfile" default="${closure-compiler.jar}" />
-		<attribute name="compilationlevel" default="SIMPLE_OPTIMIZATIONS" />
-		<attribute name="outputmode" default="compiled" />
-		<element name="extraflags" optional="yes"/>
-		<element name="extrapaths" optional="yes"/>
-		<sequential>
-			<exec executable="python" failonerror="true" logError="true">
-				<arg value="${closure-library.dir}/closure/bin/calcdeps.py" />
-				<arg line='-i "@{inputfile}"' />
-				<arg line='--output_file "@{outputfile}"' />
-				<arg line='-p "${closure-library.dir}"' />
-				<arg line='-p "${closure-templates.dir}/javascript/soyutils_usegoog.js"' />
-				<extrapaths />
-				<arg line="-o @{outputmode}" />
-				<arg line='-c "@{compilerjarfile}"' />
-				<arg line='-f "--compilation_level=@{compilationlevel}"' />
-				<extraflags />
-			</exec>
-		</sequential>
-	</macrodef>
-	
-	<!-- Using calcdeps to compile the JavaScript (could also be used to generate a deps file) -->
-	<macrodef name="depswriter">
-		<attribute name="outputfile" />
-		<element name="extrapaths" optional="yes"/>
-		<sequential>
-			<exec executable="python" failonerror="true" logError="true">
-				<arg value="${closure-library.dir}/closure/bin/build/depswriter.py" />
-				<arg line='--root_with_prefix="${closure-templates.dir}/javascript ../../../closure-templates/javascript"' />
-				<arg line='--root_with_prefix="${build.dir}/templates ${fromBase.dir}/build/templates"' />
-				<arg line='--root_with_prefix="js ${fromBase.dir}/js"' />
-				<arg line='--output_file="@{outputfile}"' />
-				<extrapaths />
-			</exec>
-		</sequential>
-	</macrodef>
-
-
-<!-- Targets -->
-	
-	<!-- Options for the compilationlevels:
-		WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS, ADVANCED_OPTIMIZATIONS" -->
-		
-    <target name="clean" description="deletes all files created by this script">
-    	<delete dir="${build.dir}" />
-    </target>
-
-	<target name="replicate">
-		<copy todir="${build.dir}/files">
-			<fileset dir=".">
-				<include name="html/**" />
-				<include name="manifest.json" />
-				<include name="images/**" />
-				<include name="styles/**" />
-			</fileset>
-		</copy>
-	</target>
-
-    <target name="popup-window-soy" description="generates popup_window.soy.js">
-		<mkdir dir="${build.dir}/templates" />
-    	<generate-template
-    		inputfile="templates/popup_window.soy"
-    		outputPathFormat="${build.dir}/templates/popup_window.soy.js"
-    		/>
-    </target>
-
-    <target name="course-dialog-soy" description="generates course_dialog.soy.js">
-		<mkdir dir="${build.dir}/templates" />
-    	<generate-template
-    		inputfile="templates/course_dialog.soy"
-    		outputPathFormat="${build.dir}/templates/course_dialog.soy.js"
-    		/>
-    </target>
-
-    <target name="gen_js_deps" description="generates deps.js">
-    	<depswriter outputFile="${build.dir}/deps.js" />
-    </target>
-
-	<target name="rosegrid-compiled"
-    	description="generates roseGrid-compiled.js">
-    	<mkdir dir="${build.dir}" />
-		<mkdir dir="${build.dir}/files" />
-    	<closure-compile
-    		inputfile="${inputFileToCompile}"
-    		outputfile="${build.dir}/files/rosegrid-compiled.js"
-    		compilationlevel="SIMPLE_OPTIMIZATIONS" >
-    		<extrapaths>
-    			<arg line='-p "${basedir}/js"' />
-    			<arg line='-p "${build.dir}/templates"' />
-    		</extrapaths>
-    		<extraflags>
-    			<arg line='-f "--output_wrapper=${outputwrapper}"' />
-    			<arg line='-f "--formatting=PRETTY_PRINT"' />
-    			<arg line='-f "--warning_level=VERBOSE"' />
-    			<!--arg line='-f "XXjscomp_error=checkTypes"' -->
-    		</extraflags>
-    	</closure-compile>
-    </target>
-	<!--
-	    <target name="rosegrid-compiled"
-    	description="generates roseGrid-compiled.js">
-    	<mkdir dir="${build.dir}" />
-		<mkdir dir="${build.dir}/files" />
-    	<closure-builder
-    		inputfile="${inputFileToCompile}"
-    		outputfile="${build.dir}/files/rosegrid-compiled.js"
-    		compilationlevel="SIMPLE_OPTIMIZATIONS" >
-    		<extrapaths>
-    			<arg line='XXroot="${basedir}/js"' />
-    			<arg line='XXroot="${build.dir}/templates"' />
-    		</extrapaths>
-    		<extraflags>
-    			<arg line='-f "XXoutput_wrapper=${outputwrapper}"' />
-    			<arg line='-f "XXformatting=PRETTY_PRINT"' />
-    			<arg line='-f "XXwarning_level=VERBOSE"' />
-    			<arg line='-f "XXjscomp_error=checkTypes"' />
-    		</extraflags>
-    	</closure-builder>
-    </target>
-	-->
-	
-	<target name="build" depends="rosegrid-compiled" />
-    
 </project>

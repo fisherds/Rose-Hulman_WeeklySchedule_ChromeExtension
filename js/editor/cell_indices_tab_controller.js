@@ -1,6 +1,6 @@
 
 /**
- * @fileOverview Controller for the tab that allows a user to change the cell
+ * @fileoverview Controller for the tab that allows a user to change the cell
  * indices for a cell group.  
  *   
  * @author fisherds@gmail.com (Dave Fisher)
@@ -20,6 +20,7 @@ goog.require('rosegrid.model.Course');
  * @extends {goog.Disposable}
  */
 rosegrid.editor.CellIndicesTabController = function() {
+  goog.base(this);
 
   
   /**

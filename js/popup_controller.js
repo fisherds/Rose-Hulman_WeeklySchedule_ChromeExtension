@@ -1,14 +1,14 @@
 /**
- * @fileOverview Primary controller for the popup.html window.
+ * @fileoverview Controller for the extension popup window.
  * Loads Soy data, components, listeners, and other initialization work.
  *   
  * @author fisherds@gmail.com (Dave Fisher)
  */
 
-goog.provide('rosegrid.PopupWindow');
+goog.provide('rosegrid.PopupController');
 
-goog.require('goog.debug');
-goog.require('goog.debug.Console');
+
+goog.require('goog.Disposable');
 goog.require('goog.debug.Logger');
 goog.require('goog.dom');
 goog.require('goog.events');
@@ -16,23 +16,26 @@ goog.require('goog.soy');
 goog.require('rosegrid.templates.popup');
 goog.require('rosegrid.ui.CellControl');
 goog.require('rosegrid.ui.TableContainer');
-
-goog.require('rosegrid.ui.CourseEditor');
-goog.require('rosegrid.editor.CourseDialog');
-
+//goog.require('rosegrid.editor.CourseDialogController');
 goog.require('rosegrid.model.QuarterSchedule');
-
-
-goog.require('rosegrid.RoseClock');
 
 
 
 /**
  * Controller for the extension's Popup window.
+ * @param {!Element} container The container element for this controller.
  * @constructor
+ * @extends goog.Disposable
  */
-rosegrid.PopupWindow = function() {
+rosegrid.PopupController = function(container) {
 
+  /**
+   * Body element of the popup.html page.
+   * @type {!Element}
+   * @private
+   */
+  this.container_ = container;
+  
   /**
    * Holds the courses that are in this quarter's schedule.
    * @type {rosegrid.model.QuarterSchedule} 
@@ -52,12 +55,12 @@ rosegrid.PopupWindow = function() {
   this.cellControls = [];
   // CONSIDER: These might all be held by the table container and a list here might be unnecessary.
 
-  /**
-   * Dialog box to allow course creation and editing.
-//   * @type {rosegrid.ui.CourseEditor} 
-   * @type {rosegrid.editor.CourseDialog}
-   */ 
-  this.courseEditor;
+//  /**
+//   * Dialog box to allow course creation and editing.
+////   * @type {rosegrid.ui.CourseEditor} 
+//   * @type {rosegrid.editor.CourseDialogController}
+//   */ 
+//  this.courseEditor;
   
   
   
@@ -65,31 +68,31 @@ rosegrid.PopupWindow = function() {
     
 	this.init_();
 };
-// CONSIDER: Might want to subclass Disposable.
+goog.inherits(rosegrid.PopupController, goog.Disposable);
 
 
 /**
  * Logger for this class.
  * @type {goog.debug.Logger}
  */
-rosegrid.PopupWindow.prototype.logger = goog.debug.Logger.getLogger('rosegrid.PopupWindow');
+rosegrid.PopupController.prototype.logger =
+    goog.debug.Logger.getLogger('rosegrid.PopupController');
 
 
 /**
  * Loads Soy html, adds components to the page, and initializes the dialog box.
  */
-rosegrid.PopupWindow.prototype.init_ = function() {
+rosegrid.PopupController.prototype.init_ = function() {
 
 	// Load the html using Soy
 	var daysOfTheWeek = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
 	var soyData = {days: daysOfTheWeek};
-	goog.soy.renderElement(goog.dom.getElement('popup'), rosegrid.templates.popup.body, soyData);
+	goog.soy.renderElement(this.container_, rosegrid.templates.popup.body, soyData);
 
   this.quarterSchedule.loadSavedCourses();
 
 	// The table values will be updated when they are constructed.
   var table = goog.dom.getElementsByTagNameAndClass('table')[0];
-	window.console.log("table " + table);
 	var tableContainer = new rosegrid.ui.TableContainer(this.weekModel);
 	tableContainer.decorate(table);
 	
@@ -99,17 +102,9 @@ rosegrid.PopupWindow.prototype.init_ = function() {
 	      goog.bind(this.cellControlClickListener_, this));	  
 	}
 	
-  // Initialize the logger.
-	//Log levels: shout, severe, warning, info, config, fine, finer, finest
-  goog.debug.LogManager.getRoot().setLevel(goog.debug.Logger.Level.ALL);
-  var logconsole = new goog.debug.Console();
-  logconsole.setCapturing(true);
   
 	this.logger.info('Total number of listeners = ' + goog.events.getTotalListenerCount());
 	// Originally 252 prior to adding a container
-	
-
-	rosegrid.RoseClock.getInstance().updateOffset();
 };
 
 
@@ -117,26 +112,32 @@ rosegrid.PopupWindow.prototype.init_ = function() {
  * Handle the click event when a cell control is selected.
  * @param {goog.events.Event} e Event from the cell-control
  */
-rosegrid.PopupWindow.prototype.cellControlClickListener_ = function(e) {
-  if (this.courseEditor == null) {
-    this.logger.info("Made a new course editor");
-    //this.courseEditor = new rosegrid.ui.CourseEditor();
-    this.courseEditor = new rosegrid.editor.CourseDialog();
-  }
+rosegrid.PopupController.prototype.cellControlClickListener_ = function(e) {
+  this.logger.info("cellControlClickListener_");
+//  if (!this.courseEditor) {
+//    this.logger.info("Made a new course editor");
+//    this.courseEditor = new rosegrid.editor.CourseDialogController();
+//  }
+//  
+//  // Figure up the course that was clicked and pass it along
+//  var cellControl = /** @type {rosegrid.ui.CellControl} */ (e.target);
+//  var cellModel = cellControl.getModel();
+//  var cellIndex = this.weekModel.getCellIndexForCellModel(cellModel);
+//  var course = this.quarterSchedule.getCourseAtCellIndex(cellIndex);
+//  var isNewCourse = false;
+//  if (course == null) {
+//    course = new rosegrid.model.Course(this.weekModel);
+//    isNewCourse = true;
+//  }
+//  this.courseEditor.launchEditorForCourse(course, isNewCourse);
   
-  // Figure up the course that was clicked and pass it along
-  var cellControl = /** @type {rosegrid.ui.CellControl} */ (e.target);
-  var cellModel = cellControl.getModel();
-  var cellIndex = this.weekModel.getCellIndexForCellModel(cellModel);
-  var course = this.quarterSchedule.getCourseAtCellIndex(cellIndex);
-  var isNewCourse = false;
-  if (course == null) {
-    course = new rosegrid.model.Course(this.weekModel);
-    isNewCourse = true;
-  }
-  this.courseEditor.launchEditorForCourse(course, isNewCourse);
+//  goog.events.listen(this.courseEditor.courseDialog_,
+//      goog.ui.Dialog.EventType.SELECT,
+//      goog.bind(this.handleDialogClose_, this));
+};
+
+
+/** @override */
+rosegrid.PopupController.prototype.disposeInternal = function() {
   
-  goog.events.listen(this.courseEditor.courseDialog_,
-      goog.ui.Dialog.EventType.SELECT,
-      goog.bind(this.handleDialogClose_, this));
 };
